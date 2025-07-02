@@ -9,4 +9,8 @@ class Order extends Model
 {
     /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
+
+    public function items(){
+        return $this->hasMany(Order_item::class);
+    }
 }
