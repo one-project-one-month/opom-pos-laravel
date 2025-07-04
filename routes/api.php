@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Route;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -11,7 +12,6 @@ Route::get('/user', function (Request $request) {
 Route::apiResource("/v1/products", ProductController::class);
 
 // Authentication routes
-use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1/auth')->group(function () {
     Route::post('/register', [AuthController::class, 'register']);
