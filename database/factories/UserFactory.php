@@ -27,7 +27,7 @@ class UserFactory extends Factory
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
             'password' => static::$password ??= Hash::make('password'),
-            // 'confirmed_at' => $this->faker->dateTimeBetween('-20 years', 'now'), 
+            // 'confirmed_at' => $this->faker->dateTimeBetween('-20 years', 'now'),
 
         ];
     }

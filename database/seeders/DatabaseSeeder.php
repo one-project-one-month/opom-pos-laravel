@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Brand;
 use App\Models\User;
 use App\Models\Product;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -20,6 +21,7 @@ class DatabaseSeeder extends Seeder
 
         Product::factory(10)->create();
         Category::factory(5)->create();
+        Brand::factory(5)->create();
         User::factory()->create([
             'name' => 'Test User',
             'email' => 'test@example.com',
