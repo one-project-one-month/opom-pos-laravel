@@ -13,10 +13,7 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource("/v1/products", ProductController::class);
 
-Route::post('add-categories',[CategoryController::class,'adding']);
-Route::put('update-categories',[CategoryController::class,'update']);
-Route::delete('delete-categories',[CategoryController::class,'delete']);
-Route::get('getData',[CategoryController::class,'dataGet']);
+Route::apiResource('categories', CategoryController::class);
 
 // Brand Routes
 Route::post('add-brands', [BrandController::class, 'adding']);
