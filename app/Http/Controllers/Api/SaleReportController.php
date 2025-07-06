@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Order_item;
 
 
 class SaleReportController extends Controller
@@ -61,5 +63,128 @@ class SaleReportController extends Controller
         return response()->json($totalAmount);
     }
     
+    public function getWeeklyTopSaleItems(Request $request){
+        $action = $request->query('action','quantity');
+        
+        if($action == 'quantity'){
+            $query = Order_item::query()
+                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                ->with('product')
+                ->select('product_id',
+                    DB::raw('SUM(quantity) as total_quantity'),
+                    DB::raw('MAX(price) as price'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->orderByDesc('total_quantity');
+        }else{
+            $query = Order_item::query()
+                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
+                ->with('product')
+                ->select('product_id',
+                    DB::raw('SUM(quantity) as total_quantity'),
+                    DB::raw('MAX(price) as price'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->orderByDesc('total');
+        }
+            
+        $order_items = $query->get();
+        return response()->json($order_items);
+        
+    }
+
+    public function getWeeklyLowerSaleItems(Request $request){
+        $action = $request->query('action','quantity');
+        if($action == 'quantity'){
+            $query = Order_item::query()
+                ->whereBetween('created_at', [now()->startOfWeek(),now()->endOfWeek()])
+                ->with('product')
+                ->select('product_id',
+                    DB::raw('SUM(quantity) as total_quantity'),
+                    DB::raw('MAX(price) as price'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->orderBy('total_quantity')
+                ->limit(10);
+        }else{
+            $query = Order_item::query()
+                ->whereBetween('created_at', [now()->startOfWeek(),now()->endOfWeek()])
+                ->with('product')
+                ->select('product_id',
+                    DB::raw('SUM(quantity) as total_quantity'),
+                    DB::raw('MAX(price) as price'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->orderBy('total')
+                ->limit(10);
+        }
+        $order_items = $query->get();
+        return response()->json($order_items);
+
+    }
+
+    public function getMonthlyTopSaleItems(Request $request){
+        $action = $request->query('action','quantity');
+        if($action == 'quantity'){
+            $query = Order_item::query()
+            ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
+            ->with('product')
+            ->select('product_id',
+                DB::raw('SUM(quantity) as total_quantity'),
+                DB::raw('MAX(price) as price'),
+                DB::raw('SUM(total) as total')
+            )
+            ->groupBy('product_id')
+            ->orderByDesc('total_quantity');
+        }else{
+            $query = Order_item::query()
+                ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
+                ->with('product')
+                ->select('product_id',
+                    DB::raw('SUM(quantity) as total_quantity'),
+                    DB::raw('MAX(price) as price'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->orderByDesc('total');   
+        }
+        $order_items = $query->get();
+        return response()->json($order_items);
+    }
+
+    public function getMonthlyLowerSalesItems(Request $request){
+        $action = $request->query('action',"quantity");
+        if($action == "quantity"){
+            $query = Order_item::query()
+                    ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
+                    ->with('product')
+                    ->select('product_id',
+                        DB::raw('SUM(quantity) as total_quantity'),
+                        DB::raw('MAX(price) as price'),
+                        DB::raw('SUM(total) as total')
+                    )
+                    ->groupBy('product_id')
+                    ->orderBy('total_quantity')
+                    ->limit('10');
+        }else{
+            $query = Order_item::query()
+            ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
+            ->with('product')
+            ->select('product_id',
+                DB::raw('SUM(quantity) as total_quantity'),
+                DB::raw('MAX(price) as price'),
+                DB::raw('SUM(total) as total')
+            )
+            ->groupBy('product_id')
+            ->orderBy('total')
+            ->limit('10');
+        }
+        $order_items = $query->get();
+        return response()->json($order_items);
+    }
 
 }
