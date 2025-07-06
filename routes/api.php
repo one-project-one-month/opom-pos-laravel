@@ -13,7 +13,7 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource("/v1/products", ProductController::class);
 
-Route::apiResource('categories', CategoryController::class);
+Route::apiResource('/v1/categories', CategoryController::class);
 
 // Brand Routes
 Route::post('add-brands', [BrandController::class, 'adding']);
