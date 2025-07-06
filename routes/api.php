@@ -15,9 +15,4 @@ Route::apiResource("/v1/products", ProductController::class);
 
 Route::apiResource('/v1/categories', CategoryController::class);
 
-// Brand Routes
-Route::post('add-brands', [BrandController::class, 'adding']);
-Route::put('update-brands', [BrandController::class, 'update']);
-Route::delete('delete-brands', [BrandController::class, 'delete']);
-Route::get('get-brands', [BrandController::class, 'dataGet']);
-
+Route::apiResource('v1/brands', BrandController::class);
