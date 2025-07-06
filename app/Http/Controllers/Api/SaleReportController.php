@@ -9,7 +9,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\Order_item;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SaleReportController extends Controller
 {
@@ -187,4 +187,39 @@ class SaleReportController extends Controller
         return response()->json($order_items);
     }
 
+    public function downloadSaleReport(Request $request){
+        $time = $request->query('time','monthly');
+        $choice = $request->query('choice','top');
+        $action = $request->query('action','total_quantity');
+
+        $query = Order_item::query()
+                ->select('product_id',
+                DB::raw('SUM(quantity) as total_quantity'),
+                DB::raw('MAX(price) as price'),
+                DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->with('product')
+                ->limit(20);
+
+        if($time == 'weekly'){
+            $query->whereBetween('created_at',[now()->startOfWeek(),now()->endOfWeek()]);
+        }else{
+            $query->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()]);
+        }
+
+        if($choice == 'top'){
+            $query->orderByDesc($action);
+        }else{
+            $query->orderBy($action);
+        }
+        $order_items = $query->get();
+
+        $pdf = Pdf::loadView('sale_reports',[
+            'time' => $time,
+            'choice' => $choice,
+            'order_items' => $order_items
+        ]);
+        return $pdf->download('sale_reports');
+    }
 }
