@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\OrderItem;
 
 
 class SaleReportController extends Controller
@@ -66,7 +67,7 @@ class SaleReportController extends Controller
         $action = $request->query('action','quantity');
         
         if($action == 'quantity'){
-            $query = Order_item::query()
+            $query = OrderItem::query()
                 ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
                 ->with('product')
                 ->select('product_id',
@@ -77,7 +78,7 @@ class SaleReportController extends Controller
                 ->groupBy('product_id')
                 ->orderByDesc('total_quantity');
         }else{
-            $query = Order_item::query()
+            $query = OrderItem::query()
                 ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
                 ->with('product')
                 ->select('product_id',
@@ -89,15 +90,15 @@ class SaleReportController extends Controller
                 ->orderByDesc('total');
         }
             
-        $order_items = $query->get();
-        return response()->json($order_items);
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
         
     }
 
     public function getWeeklyLowerSaleItems(Request $request){
         $action = $request->query('action','quantity');
         if($action == 'quantity'){
-            $query = Order_item::query()
+            $query = OrderItem::query()
                 ->whereBetween('created_at', [now()->startOfWeek(),now()->endOfWeek()])
                 ->with('product')
                 ->select('product_id',
@@ -109,7 +110,7 @@ class SaleReportController extends Controller
                 ->orderBy('total_quantity')
                 ->limit(10);
         }else{
-            $query = Order_item::query()
+            $query = OrderItem::query()
                 ->whereBetween('created_at', [now()->startOfWeek(),now()->endOfWeek()])
                 ->with('product')
                 ->select('product_id',
@@ -121,15 +122,15 @@ class SaleReportController extends Controller
                 ->orderBy('total')
                 ->limit(10);
         }
-        $order_items = $query->get();
-        return response()->json($order_items);
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
 
     }
 
     public function getMonthlyTopSaleItems(Request $request){
         $action = $request->query('action','quantity');
         if($action == 'quantity'){
-            $query = Order_item::query()
+            $query = OrderItem::query()
             ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
             ->with('product')
             ->select('product_id',
@@ -140,7 +141,7 @@ class SaleReportController extends Controller
             ->groupBy('product_id')
             ->orderByDesc('total_quantity');
         }else{
-            $query = Order_item::query()
+            $query = OrderItem::query()
                 ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
                 ->with('product')
                 ->select('product_id',
@@ -151,14 +152,14 @@ class SaleReportController extends Controller
                 ->groupBy('product_id')
                 ->orderByDesc('total');   
         }
-        $order_items = $query->get();
-        return response()->json($order_items);
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
     }
 
     public function getMonthlyLowerSalesItems(Request $request){
         $action = $request->query('action',"quantity");
         if($action == "quantity"){
-            $query = Order_item::query()
+            $query = OrderItem::query()
                     ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
                     ->with('product')
                     ->select('product_id',
@@ -170,7 +171,7 @@ class SaleReportController extends Controller
                     ->orderBy('total_quantity')
                     ->limit('10');
         }else{
-            $query = Order_item::query()
+            $query = OrderItem::query()
             ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
             ->with('product')
             ->select('product_id',
@@ -182,8 +183,8 @@ class SaleReportController extends Controller
             ->orderBy('total')
             ->limit('10');
         }
-        $order_items = $query->get();
-        return response()->json($order_items);
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
     }
 
 }
