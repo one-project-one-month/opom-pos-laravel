@@ -9,6 +9,7 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\OrderItem;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 
 class SaleReportController extends Controller
