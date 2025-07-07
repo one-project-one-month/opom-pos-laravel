@@ -19,4 +19,3 @@ Route::get("/v1/orders_month", [SaleReportController::class, 'orderMonth'] );
 Route::get("/v1/totalAmount", [SaleReportController::class, 'totalAmount']);
 Route::get("/v1/total_week", [SaleReportController::class, 'totalWeek']);
 Route::get("/v1/total_month", [SaleReportController::class, 'totalMonth']);
-Route::get("/v1/week_gain", [SaleReportController::class, 'weekGain']);

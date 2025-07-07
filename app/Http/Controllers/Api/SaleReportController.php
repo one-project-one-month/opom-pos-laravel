@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -84,4 +85,131 @@ class SaleReportController extends Controller
         
     }
 
+    public function getWeeklyLowerSaleItems(Request $request){
+        $action = $request->query('action','quantity');
+        if($action == 'quantity'){
+            $query = OrderItem::query()
+                ->whereBetween('created_at', [now()->startOfWeek(),now()->endOfWeek()])
+                ->with('product')
+                ->select('product_id',
+                    DB::raw('SUM(quantity) as total_quantity'),
+                    DB::raw('MAX(price) as price'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->orderBy('total_quantity')
+                ->limit(10);
+        }else{
+            $query = OrderItem::query()
+                ->whereBetween('created_at', [now()->startOfWeek(),now()->endOfWeek()])
+                ->with('product')
+                ->select('product_id',
+                    DB::raw('SUM(quantity) as total_quantity'),
+                    DB::raw('MAX(price) as price'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->orderBy('total')
+                ->limit(10);
+        }
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
+
+    }
+
+    public function getMonthlyTopSaleItems(Request $request){
+        $action = $request->query('action','quantity');
+        if($action == 'quantity'){
+            $query = OrderItem::query()
+            ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
+            ->with('product')
+            ->select('product_id',
+                DB::raw('SUM(quantity) as total_quantity'),
+                DB::raw('MAX(price) as price'),
+                DB::raw('SUM(total) as total')
+            )
+            ->groupBy('product_id')
+            ->orderByDesc('total_quantity');
+        }else{
+            $query = OrderItem::query()
+                ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
+                ->with('product')
+                ->select('product_id',
+                    DB::raw('SUM(quantity) as total_quantity'),
+                    DB::raw('MAX(price) as price'),
+                    DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->orderByDesc('total');   
+        }
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
+    }
+
+    public function getMonthlyLowerSalesItems(Request $request){
+        $action = $request->query('action',"quantity");
+        if($action == "quantity"){
+            $query = OrderItem::query()
+                    ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
+                    ->with('product')
+                    ->select('product_id',
+                        DB::raw('SUM(quantity) as total_quantity'),
+                        DB::raw('MAX(price) as price'),
+                        DB::raw('SUM(total) as total')
+                    )
+                    ->groupBy('product_id')
+                    ->orderBy('total_quantity')
+                    ->limit('10');
+        }else{
+            $query = OrderItem::query()
+            ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
+            ->with('product')
+            ->select('product_id',
+                DB::raw('SUM(quantity) as total_quantity'),
+                DB::raw('MAX(price) as price'),
+                DB::raw('SUM(total) as total')
+            )
+            ->groupBy('product_id')
+            ->orderBy('total')
+            ->limit('10');
+        }
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
+    }
+
+    public function downloadSaleReport(Request $request){
+        $time = $request->query('time','monthly');
+        $choice = $request->query('choice','top');
+        $action = $request->query('action','total_quantity');
+
+        $query = OrderItem::query()
+                ->select('product_id',
+                DB::raw('SUM(quantity) as total_quantity'),
+                DB::raw('MAX(price) as price'),
+                DB::raw('SUM(total) as total')
+                )
+                ->groupBy('product_id')
+                ->with('product')
+                ->limit(20);
+
+        if($time == 'weekly'){
+            $query->whereBetween('created_at',[now()->startOfWeek(),now()->endOfWeek()]);
+        }else{
+            $query->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()]);
+        }
+
+        if($choice == 'top'){
+            $query->orderByDesc($action);
+        }else{
+            $query->orderBy($action);
+        }
+        $OrderItems = $query->get();
+
+        $pdf = Pdf::loadView('sale_reports',[
+            'time' => $time,
+            'choice' => $choice,
+            'OrderItems' => $OrderItems
+        ]);
+        return $pdf->download('sale_reports');
+    }
 }
