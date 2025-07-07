@@ -43,7 +43,7 @@
         @php
             $no = 0
         @endphp
-        @foreach($order_items as $item)
+        @foreach($OrderItems as $item)
             <tr>
                 <td>{{++$no}}</td>
                 <td>{{$item->product->name}}</td>
