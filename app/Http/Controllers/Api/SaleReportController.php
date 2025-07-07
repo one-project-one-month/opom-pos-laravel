@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
-use App\Models\Order_item;
+use App\Models\OrderItem;
 
 
 class SaleReportController extends Controller
@@ -63,7 +63,7 @@ class SaleReportController extends Controller
     }
 
     public function weekGain() {
-       $week = Order_item::with('product')->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->get();
+       $week = OrderItem::with('product')->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->get();
         $cost = $week->map(function ($item) {
         return optional($item->product)->const_price;
         })->filter()->sum();

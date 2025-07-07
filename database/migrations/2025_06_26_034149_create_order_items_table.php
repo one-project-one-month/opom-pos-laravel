@@ -1,7 +1,7 @@
 <?php
 
 use App\Models\Order;
-use App\Models\Order_item;
+use App\Models\OrderItem;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -13,7 +13,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_items', function (Blueprint $table) {
+        Schema::create('OrderItems', function (Blueprint $table) {
             $table->id();
             $table->integer('order_id');
             $table->integer('product_id');
@@ -29,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists(Order_item ::class);
+        Schema::dropIfExists(OrderItem ::class);
     }
 };

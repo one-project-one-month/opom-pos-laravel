@@ -13,7 +13,7 @@ class Order extends Model
     use HasFactory;
 
     public function items(){
-        return $this->hasMany(Order_item::class);
+        return $this->hasMany(OrderItem::class);
     }
     public function user(){
         return $this->belongsTo(User::class);
