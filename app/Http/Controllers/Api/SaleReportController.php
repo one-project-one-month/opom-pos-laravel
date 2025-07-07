@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\Order_item;
 
 
 class SaleReportController extends Controller
@@ -60,6 +61,27 @@ class SaleReportController extends Controller
         $totalAmount = $total->sum('total');
         return response()->json($totalAmount);
     }
-    
+
+    public function weekGain() {
+       $week = Order_item::with('product')->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->get();
+        $cost = $week->map(function ($item) {
+        return optional($item->product)->const_price;
+        })->filter()->sum();
+        
+        $price = $week->map(function ($item) {
+        
+        return optional($item->product)->price;
+        })->filter()->sum();
+       
+        $gain = $price - $cost;
+
+    return response()->json([
+        'gain' => $gain,
+        'total_cost' => $cost,
+        'total_price' => $price
+    ]);
+            
+        
+    }
 
 }

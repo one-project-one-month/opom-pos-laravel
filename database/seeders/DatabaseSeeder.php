@@ -6,6 +6,7 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\Customer;
+use App\Models\Order_item;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -16,7 +17,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(2)->create();
+        // Order_item::factory(10)->create();
+        // User::factory(2)->create();
+        //Order
         // Customer::factory(5)->create();
 
         // Product::factory(10)->create();
