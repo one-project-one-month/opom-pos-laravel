@@ -19,3 +19,13 @@ Route::get("/v1/orders_month", [SaleReportController::class, 'orderMonth'] );
 Route::get("/v1/totalAmount", [SaleReportController::class, 'totalAmount']);
 Route::get("/v1/total_week", [SaleReportController::class, 'totalWeek']);
 Route::get("/v1/total_month", [SaleReportController::class, 'totalMonth']);
+Route::get("/v1/week_gain", [SaleReportController::class, 'weekGain']);
+
+# top & lower sale report
+Route::get('/v1/get_weekly_top_sale_items{action?}',[SaleReportController::class,'getWeeklyTopSaleItems']);
+Route::get('/v1/get_weekly_lower_sale_items{action?}',[SaleReportController::class,'getWeeklyLowerSaleItems']);
+Route::get('/v1/get_monthly_top_sale_items{action?}',[SaleReportController::class,'getMonthlyTopSaleItems']);
+Route::get('/v1/get_monthly_lower_sale_items{action?}',[SaleReportController::class,'getMonthlyLowerSalesItems']);
+
+# download route (sale report)
+Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}',[SaleReportController::class,'downloadSaleReport']);
