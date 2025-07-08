@@ -53,8 +53,10 @@ class ProductController extends Controller
             ]);
 
             //Success response
-            return redirect()->route('products.index')
-                ->with('success', '${product->name} Product created successfully!');
+            return response()->json([
+                'message' => 'Product (' . $product->name . ') created successfully',
+                'product' => $product
+            ], 201);
         } catch (\Exception $e) {
             // Handle errors
             // Rollback photo upload if error
@@ -62,9 +64,9 @@ class ProductController extends Controller
                 Storage::disk('public')->delete($photoPath);
             }
 
-            return back()
-                ->withInput()
-                ->with('error', 'Error creating product: ' . $e->getMessage());
+            return response()->json([
+                'error' => 'Error creating product: ' . $e->getMessage()
+            ], 500);
         }
     }
 
