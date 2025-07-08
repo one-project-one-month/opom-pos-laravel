@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
+use App\Models\OrderItem;
 
 
 class SaleReportController extends Controller
@@ -61,6 +62,25 @@ class SaleReportController extends Controller
         $totalAmount = $total->sum('total');
         return response()->json($totalAmount);
     }
+       public function weekGain() {
+       $week = OrderItem::with('product')->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->get();
+        $cost = $week->map(function ($item) {
+        return optional($item->product)->const_price;
+        })->filter()->sum();
+        
+        $price = $week->map(function ($item) {
+
+        return optional($item->product)->price;
+        })->filter()->sum();
+       
+        $gain = $price - $cost;
+
+    return response()->json([
+        'gain' => $gain,
+        'total_cost' => $cost,
+        'total_price' => $price
+    ]);
+}
     
     public function getWeeklyTopSaleItems(Request $request){
         $action = $request->query('action','quantity');
@@ -91,43 +111,13 @@ class SaleReportController extends Controller
             
         $OrderItems = $query->get();
         return response()->json($OrderItems);
-    
-    public function getWeeklyTopSaleItems(Request $request){
-        $action = $request->query('action','quantity');
-        
-        if($action == 'quantity'){
-            $query = Order_item::query()
-                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-                ->with('product')
-                ->select('product_id',
-                    DB::raw('SUM(quantity) as total_quantity'),
-                    DB::raw('MAX(price) as price'),
-                    DB::raw('SUM(total) as total')
-                )
-                ->groupBy('product_id')
-                ->orderByDesc('total_quantity');
-        }else{
-            $query = Order_item::query()
-                ->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])
-                ->with('product')
-                ->select('product_id',
-                    DB::raw('SUM(quantity) as total_quantity'),
-                    DB::raw('MAX(price) as price'),
-                    DB::raw('SUM(total) as total')
-                )
-                ->groupBy('product_id')
-                ->orderByDesc('total');
-        }
-            
-        $order_items = $query->get();
-        return response()->json($order_items);
         
     }
 
     public function getWeeklyLowerSaleItems(Request $request){
         $action = $request->query('action','quantity');
         if($action == 'quantity'){
-            $query = Order_item::query()
+            $query = OrderItem::query()
                 ->whereBetween('created_at', [now()->startOfWeek(),now()->endOfWeek()])
                 ->with('product')
                 ->select('product_id',
@@ -139,7 +129,7 @@ class SaleReportController extends Controller
                 ->orderBy('total_quantity')
                 ->limit(10);
         }else{
-            $query = Order_item::query()
+            $query = OrderItem::query()
                 ->whereBetween('created_at', [now()->startOfWeek(),now()->endOfWeek()])
                 ->with('product')
                 ->select('product_id',
@@ -151,15 +141,15 @@ class SaleReportController extends Controller
                 ->orderBy('total')
                 ->limit(10);
         }
-        $order_items = $query->get();
-        return response()->json($order_items);
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
 
     }
 
     public function getMonthlyTopSaleItems(Request $request){
         $action = $request->query('action','quantity');
         if($action == 'quantity'){
-            $query = Order_item::query()
+            $query = OrderItem::query()
             ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
             ->with('product')
             ->select('product_id',
@@ -170,7 +160,7 @@ class SaleReportController extends Controller
             ->groupBy('product_id')
             ->orderByDesc('total_quantity');
         }else{
-            $query = Order_item::query()
+            $query = OrderItem::query()
                 ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
                 ->with('product')
                 ->select('product_id',
@@ -181,14 +171,14 @@ class SaleReportController extends Controller
                 ->groupBy('product_id')
                 ->orderByDesc('total');   
         }
-        $order_items = $query->get();
-        return response()->json($order_items);
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
     }
 
     public function getMonthlyLowerSalesItems(Request $request){
         $action = $request->query('action',"quantity");
         if($action == "quantity"){
-            $query = Order_item::query()
+            $query = OrderItem::query()
                     ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
                     ->with('product')
                     ->select('product_id',
@@ -200,7 +190,7 @@ class SaleReportController extends Controller
                     ->orderBy('total_quantity')
                     ->limit('10');
         }else{
-            $query = Order_item::query()
+            $query = OrderItem::query()
             ->whereBetween('created_at',[now()->startOfMonth(),now()->endOfMonth()])
             ->with('product')
             ->select('product_id',
@@ -212,8 +202,8 @@ class SaleReportController extends Controller
             ->orderBy('total')
             ->limit('10');
         }
-        $order_items = $query->get();
-        return response()->json($order_items);
+        $OrderItems = $query->get();
+        return response()->json($OrderItems);
     }
 
 }
