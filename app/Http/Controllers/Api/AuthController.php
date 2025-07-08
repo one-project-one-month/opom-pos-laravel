@@ -8,10 +8,67 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Password;
 
 class AuthController extends Controller
 {
+    // Forgot password
+    public function forgotPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Invalid email', 'errors' => $validator->errors()], 422);
+        }
+        Password::sendResetLink($request->only('email'));
+
+        return response()->json(['message' => 'Password reset link sent if email exists.']);
+    }
+
+    // Reset password
+    public function resetPassword(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'token' => 'required',
+            'email' => 'required|email|exists:users,email',
+            'password' => [
+                'required',
+                'string',
+                'min:6',
+                'regex:/[a-z]/',
+                'regex:/[A-Z]/',
+                'regex:/[0-9]/',
+                'regex:/[@$!%*#?&]/',
+                'confirmed',
+            ],
+            'password_confirmation' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['message' => 'Invalid data', 'errors' => $validator->errors()], 422);
+        }
+        $status = Password::reset(
+            $request->only('email', 'password', 'password_confirmation', 'token'),
+            function ($user, $password) {
+                $user->password = Hash::make($password);
+                $user->save();
+            }
+        );
+        if ($status == Password::PASSWORD_RESET) {
+            return response()->json(['message' => 'Password reset successful.']);
+        }
+        return response()->json(['message' => 'Invalid token or email.'], 400);
+    }
+
+    // Check if authenticated
+    public function checkAuth(Request $request)
+    {
+        return response()->json(['authenticated' => $request->user() ? true : false]);
+    }
+
     //register an account
     public function register(Request $request)
     {
@@ -84,7 +141,6 @@ class AuthController extends Controller
 
         return response()->json([
             'access_token'  => $accessToken,
-            // 'refresh_token' => $refreshToken,
         ]);
     }
 
@@ -97,29 +153,6 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
-    // Refresh access token using refresh token
-    // public function refresh(Request $request)
-    // {
-    //     $validator = Validator::make($request->all(), [
-    //         'refresh_token' => 'required|string',
-    //     ]);
-    //     if ($validator->fails()) {
-    //         return response()->json(['message' => 'Invalid refresh token', 'errors' => $validator->errors()], 422);
-    //     }
-    //     $user = User::where('refresh_token', $request->refresh_token)
-    //         ->where('refresh_token_expires_at', '>', Carbon::now())
-    //         ->first();
-    //     if (! $user) {
-    //         return response()->json(['message' => 'Invalid or expired refresh token'], 401);
-    //     }
-    //     // Issue new access token
-    //     $accessToken = $user->createToken('access_token')->plainTextToken;
-    //     return response()->json([
-    //         'access_token' => $accessToken,
-    //         'token_type'   => 'Bearer',
-    //         'expires_in'   => 60 * 60, // 1 hour
-    //     ]);
-    // }
 
     // Get current user
     public function user(Request $request)
