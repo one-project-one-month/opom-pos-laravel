@@ -11,6 +11,7 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource("/v1/products", ProductController::class);
 
+
 // Authentication routes
 
 Route::prefix('v1/auth')->group(function () {
