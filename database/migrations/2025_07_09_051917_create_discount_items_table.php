@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('activity_logs', function (Blueprint $table) {
+        Schema::create('discount_items', function (Blueprint $table) {
             $table->id();
-            $table->integer('user_id');
-            $table->integer('action_id');
-            $table->integer('order_id');
+            $table->integer('product_id');
+            $table->string('title');
+            $table->integer('dis_percent');
+            $table->date('start_date')->nullable();
+            $table->date('end_date')->nullable();
             $table->timestamps();
         });
     }
@@ -25,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ActivityLog');
+        Schema::dropIfExists('discount_items');
     }
 };

@@ -76,10 +76,29 @@ class SaleReportController extends Controller
         $gain = $price - $cost;
 
     return response()->json([
-        'gain' => $gain,
         'total_cost' => $cost,
-        'total_price' => $price
+        'total_price' => $price,
+        'gain' => $gain
     ]);
+}
+ public function monthGain() {
+       $month = OrderItem::with('product')->whereMonth('created_at', now()->month)->get();
+        $cost = $month->map(function ($item) {
+        return optional($item->product)->const_price;
+        })->filter()->sum();
+        
+        $price = $month->map(function ($item) {
+
+        return optional($item->product)->price;
+        })->filter()->sum();
+       
+        $gain = $price - $cost;
+
+    return response()->json([
+        'total_cost' => $cost,
+        'total_price' => $price,
+        'gain' => $gain
+    ], 200);
 }
     
     public function getWeeklyTopSaleItems(Request $request){

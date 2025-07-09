@@ -21,7 +21,7 @@ class OrderItemFactory extends Factory
             'product_id' => rand(1, 5),
             'quantity' => rand(3, 5),
             'price' => fake()->randomFloat(2, 30, 200),
-            'total' =>fake()->rand(300,400, 20000),
+            'total' =>fake()->randomFloat(300,400, 20000),
         ];
     }
 }
