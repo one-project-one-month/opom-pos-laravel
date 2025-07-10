@@ -28,5 +28,6 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
         Order::factory(10)->create();
+        DiscountItemsTableSeeder::class;
     }
 }
