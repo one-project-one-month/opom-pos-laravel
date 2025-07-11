@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
+use App\Models\Product;
 
 class CategoryController extends Controller
 {
@@ -35,9 +36,21 @@ class CategoryController extends Controller
     //     $items=Category::all();
     //     return response()->json($items);
     // }
-     public function index()
-    {
-        return CategoryResource::collection(Category::all());
+     public function index(Request $request)
+    {   
+       $category = Category::with('product')
+                    ->when($request->has('name'), function($q) use ($request){
+                        $q->where('name', 'like', '%'.$request->name.'%');
+                    })->get();
+
+        $productNames = $category->pluck('product.name')->values();
+
+        return response()->json([
+            'status' => true,
+            'category' => $category,
+            // 'product' => $productNames
+        ], 200);
+        
     }
 
     public function store(Request $request)
