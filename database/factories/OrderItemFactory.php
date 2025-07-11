@@ -5,7 +5,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Order_item>
+ * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\OrderItem>
  */
 class OrderItemFactory extends Factory
 {
@@ -17,7 +17,11 @@ class OrderItemFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'order_id' => rand(1,3),
+            'product_id' => rand(1, 5),
+            'quantity' => rand(3, 5),
+            'price' => fake()->randomFloat(2, 30, 200),
+            'total' =>fake()->randomFloat(300,400, 20000),
         ];
     }
 }
