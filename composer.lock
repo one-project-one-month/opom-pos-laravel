@@ -8870,7 +8870,7 @@
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
                 "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.25"
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/11.5.26"
+                
             },
             "funding": [
                 {
