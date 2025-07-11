@@ -60,4 +60,9 @@ class Product extends Model
             'expired_at' => 'nullable|date|after:today'
         ];
     }
+
+    public function discountItems()
+    {
+        return $this->hasOne(DiscountItem::class);
+    }
 }

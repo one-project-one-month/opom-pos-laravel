@@ -28,7 +28,12 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+<<<<<<< HEAD
         // Order::factory(10)->create();
         DiscountItem::factory(10)->create();
+=======
+        Order::factory(10)->create();
+        DiscountItemsTableSeeder::class;
+>>>>>>> 54c452e272deb607785b3080ce032ea102668c5f
     }
 }
