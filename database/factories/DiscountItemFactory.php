@@ -17,7 +17,11 @@ class DiscountItemFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'product_id' => rand(1, 5),
+            'title' => fake()->randomElement(['Water','Thatinkyaut']),
+            'dis_percent' => rand(1, 5),
+            'start_date' => now(),
+            
         ];
     }
 }

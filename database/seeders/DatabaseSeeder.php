@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\Customer;
 use App\Models\OrderItem;
+use App\Models\DiscountItem;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -27,6 +28,7 @@ class DatabaseSeeder extends Seeder
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
-        Order::factory(10)->create();
+        // Order::factory(10)->create();
+        DiscountItem::factory(10)->create();
     }
 }

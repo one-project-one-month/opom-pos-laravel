@@ -14,7 +14,7 @@ use App\Models\OrderItem;
 class SaleReportController extends Controller
 {
    public function orders()
-{
+{  
     $orders = Order::with(['user', 'customer'])->get();
 
     $userNames = $orders->pluck('user.name')->unique()->values();
