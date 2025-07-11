@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\SaleReportController;
 use App\Models\DiscountItem;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\BrandController;
+use App\Http\Controllers\Api\AuthController;
+
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -34,4 +36,18 @@ Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}', [Sale
 
 
 Route::apiResource("/v1/discount_items", DiscountItemController::class);
-Route::get("/v1/discount_products", [DiscountItemController::class,'discountProducts']);
+// Route::get("/v1/discount_products", [DiscountItemController::class,'discountProducts']);
+Route::apiResource('v1/brands', BrandController::class);
+
+// Authentication routes
+
+Route::prefix('v1/auth')->group(function () {
+    Route::post('/register', [AuthController::class, 'register']);
+    Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+    Route::get('/check-auth', [AuthController::class, 'checkAuth'])->middleware('auth:sanctum');
+    Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
+});

@@ -14,6 +14,7 @@ class Order extends Model
 
     public function items(){
         return $this->hasMany(OrderItem::class);
+<<<<<<< HEAD
     }
     public function user(){
         return $this->belongsTo(User::class);
@@ -23,5 +24,7 @@ class Order extends Model
     }
     public function product() {
         return $this->hasMany(Product::class);
+=======
+>>>>>>> 0b7984589e4fd3c43e63b4f5df8c1a607c343a98
     }
 }

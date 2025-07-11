@@ -7,7 +7,11 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+<<<<<<< HEAD
         "barryvdh/laravel-dompdf": "^3.1",
+=======
+        "bezhansalleh/filament-shield": "^3.3",
+>>>>>>> 0b7984589e4fd3c43e63b4f5df8c1a607c343a98
         "filament/filament": "3.3",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
