@@ -14,9 +14,20 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        return  Product::all();
+    public function index(Request $request)
+    {   $query = Product::query();
+        if($request->has('name')) {
+            $query->where('name', 'like', '%'. $request->name.'%');
+        }
+        $filter = $query->paginate(10);
+
+        $product = $query->paginate(10);
+        return response()->json([
+            'status' => true,
+            'message' => "All products with paginate",
+            'product' => $product,
+            'filter' => $filter
+        ], 200);
     }
 
     /**
@@ -57,6 +68,9 @@ class ProductController extends Controller
                 'message' => 'Product (' . $product->name . ') created successfully',
                 'product' => $product
             ], 201);
+
+            return redirect()->route('products.index')
+                ->with('success', '${product->name} Product created successfully!');
         } catch (\Exception $e) {
             // Handle errors
             // Rollback photo upload if error
@@ -64,9 +78,15 @@ class ProductController extends Controller
                 Storage::disk('public')->delete($photoPath);
             }
 
+
             return response()->json([
                 'error' => 'Error creating product: ' . $e->getMessage()
             ], 500);
+
+            return back()
+                ->withInput()
+                ->with('error', 'Error creating product: ' . $e->getMessage());
+
         }
     }
 
