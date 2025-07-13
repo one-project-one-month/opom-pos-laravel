@@ -6,17 +6,27 @@ use App\Models\Product;
 use App\Models\OrderItem;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Validator;
+
 
 class OrderItemController extends Controller
 {
     //
     public function store(Request $request)
     {
-        $request->validate([
-            'order_id' => 'required|integer',
+        $validator = Validator::make($request->all(), [
+            'order_id'   => 'required|integer',
             'product_id' => 'required|exists:products,id',
-            'quantity' => 'required|integer|min:1',
+            'quantity'   => 'required|integer|min:1',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation errors',
+                'errors'  => $validator->errors(),
+            ], 422);
+        }
 
         $product = Product::findOrFail($request->product_id);
 
@@ -34,11 +44,11 @@ class OrderItemController extends Controller
         ]);
 
         return response()->json([
+            'success' => true,
             'message' => 'Order item created successfully',
             'data'    => $orderItem,
         ], 201);
     }
-
     public function index()
     {
         return OrderItem::with('product')->get();
