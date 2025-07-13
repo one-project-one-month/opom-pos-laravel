@@ -16,6 +16,8 @@ class User extends Authenticatable
     /** @use HasFactory<\Data
    
 
+
+
     /**
      * The attributes that are mass assignable.
      *

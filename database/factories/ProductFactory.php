@@ -23,7 +23,7 @@ class ProductFactory extends Factory
             'const_price' => fake()->randomFloat(1, 20, 300),
             'stock' => rand(200, 300),
             'brand_id' => rand(1, 10),
-            'category_id' => rand(1, 10),
+            'category_id' => rand(1, 4),
 
         ];
     }

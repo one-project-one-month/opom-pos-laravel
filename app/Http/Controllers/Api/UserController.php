@@ -35,7 +35,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(f $f)
+    public function show( $f)
     {
         //
     }
@@ -43,7 +43,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(f $f)
+    public function edit( $f)
     {
         //
     }
@@ -51,7 +51,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, f $f)
+    public function update(Request $request,  $f)
     {
         //
     }
@@ -59,7 +59,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(f $f)
+    public function destroy( $f)
     {
         //
     }
