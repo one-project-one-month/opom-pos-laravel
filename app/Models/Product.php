@@ -61,8 +61,8 @@ class Product extends Model
         ];
     }
 
-    public function discountItems()
+    public function discountItem()
     {
-        return $this->hasOne(DiscountItem::class);
+        return $this->belongsTo(DiscountItem::class, 'discount_item_id');
     }
 }

@@ -51,4 +51,5 @@ Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}', [Sale
 
 
 Route::apiResource("/v1/discount_items", DiscountItemController::class);
-Route::get("/v1/discount_products", [DiscountItemController::class,'discountProducts']);
+Route::post('/v1/discount_items/add-products', [DiscountItemController::class, 'productAddToDiscount']);
+Route::put('/v1/discount_items/product-update/{discountId}', [DiscountItemController::class, 'discountedProductUpdate']);
