@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('stock');
             $table->integer('brand_id');
             $table->integer('category_id');
+            $table->foreignId('discount_item_id')->nullable()->constrained('discount_items');
             $table->string('photo')->nullable();
             $table->date('expired_at')->nullable();
             $table->timestamps();
