@@ -18,6 +18,27 @@ class DiscountItemController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->title == null) {
+            return response()->json([
+                'message' => 'Title is required.',
+                'errors' => [
+                    'title' => 'The title field is required.'
+                ]
+            ], 422);
+        }
+        if ($request->dis_percent == null) {
+            return response()->json([
+                'message' => 'Discount percentage is required.',
+                'errors' => [
+                    'dis_percent' => 'The discount percentage field is required.'
+                ]
+            ], 422);
+        }
+        if ($request->dis_percent < 0 || $request->dis_percent > 100) {
+            return response()->json([
+                'message' => 'Discount percentage must be between 0 and 100.',
+            ], 422);
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'dis_percent' => 'required|integer|min:0|max:100',
@@ -35,6 +56,36 @@ class DiscountItemController extends Controller
 
     public function update(Request $request, DiscountItem $discountItem)
     {
+        $isExits = DiscountItem::where('id', $discountItem->id)->exists();
+        if (!$isExits) {
+            return response()->json([
+                'message' => 'Discount item not found.',
+                'errors' => [
+                    'id' => 'The specified discount item does not exist.'
+                ]
+            ], 404);
+        }
+        if ($request->title == null) {
+            return response()->json([
+                'message' => 'Title is required.',
+                'errors' => [
+                    'title' => 'The title field is required.'
+                ]
+            ], 422);
+        }
+        if ($request->dis_percent == null) {
+            return response()->json([
+                'message' => 'Discount percentage is required.',
+                'errors' => [
+                    'dis_percent' => 'The discount percentage field is required.'
+                ]
+            ], 422);
+        }
+        if ($request->dis_percent < 0 || $request->dis_percent > 100) {
+            return response()->json([
+                'message' => 'Discount percentage must be between 0 and 100.',
+            ], 422);
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'dis_percent' => 'required|integer|min:0|max:100',
