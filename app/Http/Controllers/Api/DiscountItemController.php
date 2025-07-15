@@ -24,7 +24,8 @@ class DiscountItemController extends Controller
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
         ]);
-
+ 
+      
         $discount = DiscountItem::create($validated);
 
         return response()->json([
@@ -48,6 +49,16 @@ class DiscountItemController extends Controller
             'message' => 'Discount item updated successfully.',
             'data' => $discountItem
         ]);
+    }
+    public function show($id)
+    {
+        $discountItem = DiscountItem::with('products')->findOrFail($id);
+        return response()->json([
+            'status' => true,
+            'message' => "DiscountItem Detail",
+            'discountItem' => $discountItem
+        ], 200);
+    
     }
 
     public function destroy($id)
