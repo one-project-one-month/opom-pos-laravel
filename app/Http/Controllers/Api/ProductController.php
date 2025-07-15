@@ -15,19 +15,23 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {   $query = Product::query();
-        if($request->has('name')) {
-            $query->where('name', 'like', '%'. $request->name.'%');
-        }
-        $filter = $query->paginate(10);
-
-        $product = $query->paginate(10);
+    {  
+        $products = Product::query()->when($request->has('name'), function($q) use($request){
+        $q->where('name','like', '%'.$request->name.'%');
+        })->when($request->has('id'), function($p) use($request){
+        $p->where('id', 'like', '%'.$request->id.'%');
+        })->when($request->has('category_name'), function($r) use($request){
+        $r->whereHas('category', function($name) use ($request){
+        $name->where('name', 'like', '%'.$request->category_name.'%');
+        });
+        })->get();
+        
         return response()->json([
-            'status' => true,
-            'message' => "All products with paginate",
-            'product' => $product,
-            'filter' => $filter
-        ], 200);
+        'status' =>  true,
+        'message' => 'success filter',
+        '$producs' => $products
+    ],200);
+       
     }
 
     /**

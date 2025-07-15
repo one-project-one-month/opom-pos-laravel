@@ -43,8 +43,6 @@ class CategoryController extends Controller
                         $q->where('name', 'like', '%'.$request->name.'%');
                     })->get();
 
-        $productNames = $category->pluck('product.name')->values();
-
         return response()->json([
             'status' => true,
             'category' => $category,

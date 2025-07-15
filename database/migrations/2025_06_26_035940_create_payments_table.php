@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer('order_id');
             $table->string('method');
             $table->integer('amount');
-            $table->integer('paid_at');
+            $table->date('paid_at');
             $table->timestamps();
         });
     }
