@@ -22,14 +22,14 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        OrderItem::factory(10)->create();
-        User::factory(2)->create();
+        // OrderItem::factory(10)->create();
+        // User::factory(2)->create();
         //Order
-        Customer::factory(5)->create();
+        // Customer::factory(5)->create();
         // Payment::factory(10)->create();
 
-        Product::factory(10)->create();
-        Category::factory(5)->create();
+        // Product::factory(10)->create();
+        // Category::factory(5)->create();
        
         // Product::factory(10)->create();
         // User::factory()->create([
@@ -37,11 +37,12 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        OrderItem::factory(10)->create();
+        // OrderItem::factory(10)->create();
         // Order::factory(10)->create();
 
-        Order::factory(10)->create();
-        DiscountItem::factory(10)->create();
+        // Order::factory(10)->create();
+        // DiscountItem::factory(10)->create();
+        Brand::factory(5)->create();
 
         // $this->call([DiscountItemsTableSeeder::class]);
     }

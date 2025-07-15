@@ -18,6 +18,27 @@ class DiscountItemController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->title == null) {
+            return response()->json([
+                'message' => 'Title is required.',
+                'errors' => [
+                    'title' => 'The title field is required.'
+                ]
+            ], 422);
+        }
+        if ($request->dis_percent == null) {
+            return response()->json([
+                'message' => 'Discount percentage is required.',
+                'errors' => [
+                    'dis_percent' => 'The discount percentage field is required.'
+                ]
+            ], 422);
+        }
+        if ($request->dis_percent < 0 || $request->dis_percent > 100) {
+            return response()->json([
+                'message' => 'Discount percentage must be between 0 and 100.',
+            ], 422);
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'dis_percent' => 'required|integer|min:0|max:100',
@@ -36,6 +57,36 @@ class DiscountItemController extends Controller
 
     public function update(Request $request, DiscountItem $discountItem)
     {
+        $isExits = DiscountItem::where('id', $discountItem->id)->exists();
+        if (!$isExits) {
+            return response()->json([
+                'message' => 'Discount item not found.',
+                'errors' => [
+                    'id' => 'The specified discount item does not exist.'
+                ]
+            ], 404);
+        }
+        if ($request->title == null) {
+            return response()->json([
+                'message' => 'Title is required.',
+                'errors' => [
+                    'title' => 'The title field is required.'
+                ]
+            ], 422);
+        }
+        if ($request->dis_percent == null) {
+            return response()->json([
+                'message' => 'Discount percentage is required.',
+                'errors' => [
+                    'dis_percent' => 'The discount percentage field is required.'
+                ]
+            ], 422);
+        }
+        if ($request->dis_percent < 0 || $request->dis_percent > 100) {
+            return response()->json([
+                'message' => 'Discount percentage must be between 0 and 100.',
+            ], 422);
+        }
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'dis_percent' => 'required|integer|min:0|max:100',
@@ -68,13 +119,36 @@ class DiscountItemController extends Controller
 
         return response()->json([
             'message' => 'DiscountItem has been deleted successfully.',
-        ]);
+        ],200);
     }
 
 
 
     public function productAddToDiscount(Request $request)
     {
+       
+        if(!$request->discount_id) {
+            return response()->json([
+                'status' => false,
+                'message' => "Discount_id is required."
+            ], 422);
+        }
+
+
+        if(!$request->product_ids) {
+            return response()->json([
+                'status' => false,
+                'message' => "Product_ids is required."
+            ], 422);
+        }
+
+        if(!($request->discount_id && $request->product_ids) ){
+            return response()->json([
+                'status' =>  false,
+                'message' => "Discount_id is required and Product_ids is required"
+             ], 422);
+        }
+
 
         $validated = $request->validate([
             'discount_id' => 'required|exists:discount_items,id',
@@ -97,6 +171,20 @@ class DiscountItemController extends Controller
 
     public function discountedProductUpdate(Request $request, $discountId)
     {
+        if(!$request->product_ids) {
+            return response()->json([
+                "status" => false,
+                "message" => "product_ids is required."     
+            ], 422);
+        }
+
+        if(!$request->discount_id) {
+            return response()->json([
+                "status" => false,
+                "message" => "discount_id is required."
+            ], 422);
+        }
+
         $validated = $request->validate([
             'product_ids' => 'required|array',
             'product_ids.*' => 'integer|exists:products,id',
