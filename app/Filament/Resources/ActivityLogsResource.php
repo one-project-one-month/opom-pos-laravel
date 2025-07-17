@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ActivityLogsResource extends Resource
 {
-    protected static ?string $model = ActivityLogs::class;
+    protected static ?string $model = ActivityLogျ::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 

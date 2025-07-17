@@ -1,4 +1,4 @@
-<?php
+ <?php
 
 use App\Models\Product;
 use App\Http\Controllers\Api\CategoryController;
@@ -50,11 +50,16 @@ Route::get('/v1/get_monthly_lower_sale_items{action?}', [SaleReportController::c
 # download route (sale report)
 Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}', [SaleReportController::class, 'downloadSaleReport']);
 
+// Route::get('/v1/orders', [OrderController::class, 'index']);
+
 
 Route::apiResource("/v1/discount_items", DiscountItemController::class);
+
 Route::get("/v1/discount_products", [DiscountItemController::class, 'discountProducts']);
 
 // Order routes
 Route::prefix('v1/orders')->group(function () {
     Route::post('/checkout', [OrderController::class, 'create'])->middleware('auth:sanctum');
 });
+Route::post('/v1/discount_items/add_products', [DiscountItemController::class, 'productAddToDiscount']);
+Route::put('/v1/discount_items/product_update/{discountId}', [DiscountItemController::class, 'discountedProductUpdate']);

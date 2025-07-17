@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::create('discount_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id');
             $table->string('title');
             $table->integer('dis_percent');
             $table->date('start_date')->nullable();

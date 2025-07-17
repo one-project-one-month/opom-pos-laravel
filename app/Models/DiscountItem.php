@@ -11,13 +11,12 @@ class DiscountItem extends Model
     use HasFactory;
 
     protected $fillable = [
-        'discount_id',
-        'product_id',
-        'quantity',
+        'title',
+        'dis_percent',
     ];
 
-    public function product()
+    public function products()
     {
-        return $this->belongsTo(Product::class);
+        return $this->hasMany(Product::class, 'discount_item_id');
     }
 }

@@ -131,4 +131,16 @@ class OrderController extends Controller
             ], 500);
         }
     }
+{   
+    // public function index(Request $request)
+    // {
+    //     $order = Order::query()->paginate(3);
+    //     return response()->json([
+    //         'status' => true,
+    //         'message' => 'All Order history with paginate.',
+    //         'All orders' => $order,
+    //     ], 200);
+
+    // }
+
 }
