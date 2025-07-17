@@ -56,7 +56,7 @@ return [
         'pages' => true,
         'widgets' => true,
         'resources' => true,
-        'custom_permissions' => false,
+        'custom_permissions' => true,
     ],
 
     'generator' => [
@@ -88,5 +88,8 @@ return [
     'register_role_policy' => [
         'enabled' => true,
     ],
+
+    'show_permission_resource' => true, // Show PermissionResource in Filament UI
+    'permission_prefix_separator' => '::', // Group custom permissions by prefix 
 
 ];

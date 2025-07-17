@@ -4,7 +4,7 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\ActivityLogsResource\Pages;
 use App\Filament\Resources\ActivityLogsResource\RelationManagers;
-use App\Models\ActivityLogs;
+use App\Models\ActivityLog;
 use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 
 class ActivityLogsResource extends Resource
 {
-    protected static ?string $model = ActivityLogျ::class;
+    protected static ?string $model = ActivityLog::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
