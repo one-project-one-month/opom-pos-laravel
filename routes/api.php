@@ -17,6 +17,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource("/v1/products", ProductController::class);
+Route::get('/v1/manager_products', [ProductController::class, 'managerOfProduct']);
+Route::get('/v1/products_status', [ProductController::class, 'productStatus']);
 
 Route::apiResource('/v1/categories', CategoryController::class);
 
@@ -53,6 +55,6 @@ Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}', [Sale
 // Route::get('/v1/orders', [OrderController::class, 'index']);
 
 
-Route::apiResource("/v1/discount_items", DiscountItemController::class);
-Route::post('/v1/discount_items/add_products', [DiscountItemController::class, 'productAddToDiscount']);
-Route::put('/v1/discount_items/product_update/{discountId}', [DiscountItemController::class, 'discountedProductUpdate']);
+// Route::apiResource("/v1/discount_items", DiscountItemController::class);
+// Route::post('/v1/discount_items/add_products', [DiscountItemController::class, 'productAddToDiscount']);
+// Route::put('/v1/discount_items/product_update/{discountId}', [DiscountItemController::class, 'discountedProductUpdate']);

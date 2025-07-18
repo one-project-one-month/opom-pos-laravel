@@ -26,10 +26,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(2)->create();
         //Order
         // Customer::factory(5)->create();
-        // Payment::factory(10)->create();
+        // Payment::factory(20)->create();
 
-        // Product::factory(10)->create();
-        // Category::factory(5)->create();
+        Product::factory(50)->create();
+        // Category::factory(10)->create();
        
         // Product::factory(10)->create();
         // User::factory()->create([
@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
 
         // Order::factory(10)->create();
         // DiscountItem::factory(10)->create();
-        Brand::factory(5)->create();
+        // Brand::factory(5)->create();
 
         // $this->call([DiscountItemsTableSeeder::class]);
     }
