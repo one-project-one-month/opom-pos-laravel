@@ -17,10 +17,7 @@ class OrderItem extends Model
         'total',
     ];
 
-    public function order()
-    {
-        'total'
-    ];
+    
 
     public function order(){
         return $this->belongsTo(Order::class);
