@@ -20,6 +20,10 @@ return new class extends Migration
             $table->integer('stock');
             $table->integer('brand_id');
             $table->integer('category_id');
+            $table->integer('dis_percent')->nullable();
+            // $table->foreignId('discount_item_id')->nullable()->constrained('discount_items')
+            // ->nullOnUpdate()
+            // ->nullOnDelete();
             $table->string('photo')->nullable();
             $table->date('expired_at')->nullable();
             $table->timestamps();
@@ -31,6 +35,15 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('products');
+        // Schema::dropIfExists('products');
+        Schema::create('products', function (Blueprint $table){
+            // $table->dropForeign(['discount_item_id']);
+            // $table->foreignId('discount_item_id')->nullable()           ->constrained('discount_items') 
+            // ->references('id')
+            // ->onDelete('restrict');
+                  
+            
+
+        });
     }
 };

@@ -8,6 +8,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Svg\Tag\Rect;
 
 class ProductController extends Controller
 {
@@ -15,21 +16,75 @@ class ProductController extends Controller
      * Display a listing of the resource.
      */
     public function index(Request $request)
-    {   $query = Product::query();
-        if($request->has('name')) {
-            $query->where('name', 'like', '%'. $request->name.'%');
-        }
-        $filter = $query->paginate(10);
-
-        $product = $query->paginate(10);
+    {  
+        $products = Product::query()->when($request->has('name'), function($q) use($request){
+        $q->where('name','like', '%'.$request->name.'%');
+        })->when($request->has('id'), function($p) use($request){
+        $p->where('id', 'like', '%'.$request->id.'%');
+        })->when($request->has('category_name'), function($r) use($request){
+        $r->whereHas('category', function($name) use ($request){
+        $name->where('name', 'like', '%'.$request->category_name.'%');
+        });
+        })->get();
+        
         return response()->json([
-            'status' => true,
-            'message' => "All products with paginate",
-            'product' => $product,
-            'filter' => $filter
-        ], 200);
+        'status' =>  true,
+        'message' => 'success filter',
+        '$products' => $products
+    ],200);
+       
     }
+    
+    public function managerOfProduct(Request $request)
+{   
+        $query = Product::query(); 
+    
+    if ($request->has('status')) {
+        $status = $request->status;
 
+        // Custom logic based on status
+        if ($status === 'out_of_stock') {
+            $query->where('stock', '=', 0);
+        } elseif ($status === 'low_stock') {
+            $query->where('stock', '>', 0)->where('stock', '<=', 50);
+        } elseif ($status === 'full_stock') {
+            $query->where('stock', '>', 50);
+        }
+    }
+    // $products = $query->paginate(5);
+
+        $query->when($request->has('name'), function($q) use($request){
+        $q->where('name','like', '%'.$request->name.'%');
+        })->when($request->has('id'), function($p) use($request){
+        $p->where('id', 'like', '%'.$request->id.'%');
+        })->when($request->has('category_name'), function($r) use($request){
+        $r->whereHas('category', function($name) use ($request){
+        $name->where('name', 'like', '%'.$request->category_name.'%');
+        });
+        })
+        ->paginate(5);
+        $product = Product::all();
+        $outOfStock = Product::where('stock', '=', 0)->get();
+        $lowOfStock = Product::where('stock', '>', 0)->where('stock', '<', 50)->get();
+        $fullOfStock = Product::where('stock', '>', 50)->get();
+        $countOfOutOfStock = count($outOfStock);
+        $countLowStock = count($lowOfStock);
+        $countFullStock = count($fullOfStock);
+        $totalProduct = count($product);
+    $products = $query->paginate(5);
+        return response()->json([
+        "status" => true,
+        "message" => "Products status and filter",
+        "products" => $products,
+        'count of total products' => $totalProduct,
+        'count of out of stock' => $countOfOutOfStock,
+        'count of low of stock' => $countLowStock,
+        'count of full of stock' => $countFullStock,
+        'Out of stock' => $outOfStock,
+        'Low stock' => $lowOfStock,
+        'Full stock' => $fullOfStock,
+        ], 200);
+}
     /**
      * Store a newly created resource in storage.
      */
@@ -178,4 +233,6 @@ class ProductController extends Controller
         $Product->delete();
         return response()->json(['message' =>  $Product->name . ' Product is deleted successfully'], 200);
     }
+
+
 }

@@ -99,6 +99,23 @@ return [
 
     ],
 
+    // 'mailer' => env('MAIL_MAILER', 'smtp'),
+
+    // 'host' => env('MAIL_HOST', 'smtp.gmail.com'),
+
+    // 'port' => env('MAIL_PORT', 587),
+
+    // 'from' => [
+    //     'address' => env('MAIL_FROM_ADDRESS', 'your_email@gmail.com'),
+    //     'name' => env('MAIL_FROM_NAME', 'Your Name'),
+    // ],
+
+    // 'encryption' => env('MAIL_ENCRYPTION', 'tls'),
+
+    // 'username' => env('MAIL_USERNAME', 'your_email@gmail.com'),
+
+    // 'password' => env('MAIL_PASSWORD', 'your_email_password'),
+
     /*
     |--------------------------------------------------------------------------
     | Global "From" Address
@@ -111,7 +128,7 @@ return [
     */
 
     'from' => [
-        'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
+        'address' => env('MAIL_FROM_ADDRESS', 'earthexplorer24@gmail.com'),
         'name' => env('MAIL_FROM_NAME', 'Example'),
     ],
 

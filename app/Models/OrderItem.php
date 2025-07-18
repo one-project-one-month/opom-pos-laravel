@@ -19,6 +19,10 @@ class OrderItem extends Model
 
     public function order()
     {
+        'total'
+    ];
+
+    public function order(){
         return $this->belongsTo(Order::class);
     }
 
