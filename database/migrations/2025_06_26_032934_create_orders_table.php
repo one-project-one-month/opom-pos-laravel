@@ -16,8 +16,8 @@ return new class extends Migration
             $table->integer('order_number');
             $table->integer('user_id');
             $table->integer('total');
-            $table->integer('payment_id');
-            $table->integer('customer_id');
+            $table->integer('payment_id')->nullable();
+            $table->integer('customer_id')->nullable();
             $table->integer('paid_amount');
             $table->integer('change_amount');
             $table->timestamps();

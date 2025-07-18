@@ -31,7 +31,7 @@ Route::prefix('v1/auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
     Route::post('/refresh', [AuthController::class, 'refresh']);
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.reset');
     Route::post('/reset-password', [AuthController::class, 'resetPassword']);
     Route::get('/check-auth', [AuthController::class, 'checkAuth'])->middleware('auth:sanctum');
     Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
@@ -56,5 +56,12 @@ Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}', [Sale
 
 
 // Route::apiResource("/v1/discount_items", DiscountItemController::class);
+// 
+// Route::get("/v1/discount_products", [DiscountItemController::class, 'discountProducts']);
+
+// Order routes
+Route::prefix('v1/orders')->group(function () {
+    Route::post('/checkout', [OrderController::class, 'create'])->middleware('auth:sanctum');
+});
 // Route::post('/v1/discount_items/add_products', [DiscountItemController::class, 'productAddToDiscount']);
 // Route::put('/v1/discount_items/product_update/{discountId}', [DiscountItemController::class, 'discountedProductUpdate']);
