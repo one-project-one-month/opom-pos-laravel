@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use GuzzleHttp\Psr7\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 
 use Illuminate\Support\Str;
@@ -15,7 +17,7 @@ use Illuminate\Support\Facades\Password;
 class AuthController extends Controller
 {
     // Forgot password
-    public function forgotPassword(Request $request)
+    public function forgotPassword(Request $request, Response $response)
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|exists:users,email',
@@ -24,9 +26,26 @@ class AuthController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => 'Invalid email', 'errors' => $validator->errors()], 422);
         }
-        Password::sendResetLink($request->only('email'));
 
-        return response()->json(['message' => 'Password reset link sent if email exists.']);
+        $user = User::whereEmail($request->email)->first();
+
+        if (!$user) {
+            return back()->withErrors(['email' => 'Email not found']);
+        }
+
+        // $token = Str::random(60);
+        // $user->password_reset_token = $token;
+        // $user->password_reset_token_expires_at = now()->addHours(2);
+        // $user->save();
+        // $response = Password::sendResetLink($request->only('email'));
+
+        Mail::to('emails.reset-password', ['token' => $response], function ($message) use ($request) {
+            $message->to($request->email);
+        });
+
+        // return $response == Password::RESET_LINK_SENT
+        //     ? response()->json(['message' => 'Reset link sent to your email'], 200)
+        //     : response()->json(['message' => 'Unable to send reset link'], 400);
     }
 
     // Reset password
@@ -132,6 +151,7 @@ class AuthController extends Controller
         }
 
         $user = User::where('email', $request->email)->first();
+
         if (! $user || ! Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Invalid credentials'], 401);
         }

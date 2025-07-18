@@ -12,17 +12,30 @@ class Order extends Model
     /** @use HasFactory<\Database\Factories\OrderFactory> */
     use HasFactory;
 
-    public function items(){
-        return $this->hasMany(OrderItem::class);
+    protected $fillable = [
+        "order_number",
+        "user_id",
+        "total",
+        "payment_id",
+        "customer_id",
+        "paid_amount",
+        "change_amount",
+    ];
 
+    public function items()
+    {
+        return $this->hasMany(OrderItem::class);
     }
-    public function user(){
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
-     public function customer() {
+    public function customer()
+    {
         return $this->belongsTo(Customer::class);
     }
-    public function product() {
+    public function product()
+    {
         return $this->hasMany(Product::class);
     }
 }

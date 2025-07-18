@@ -42,9 +42,13 @@ class CategoryController extends Controller
                     ->when($request->has('name'), function($q) use ($request){
                         $q->where('name', 'like', '%'.$request->name.'%');
                     })->get();
+      $countOfProducts = $category->sum(function($category){
+        return $category->product->count();
+    });
 
         return response()->json([
             'status' => true,
+            'count of product' => $countOfProducts,
             'category' => $category,
             // 'product' => $productNames
         ], 200);
