@@ -34,11 +34,12 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->maxLength(255),
-                    Forms\Components\Select::make('roles')
-    ->relationship('roles', 'name')
-    ->multiple()
-    ->preload()
-    ->searchable(),
+                Forms\Components\Select::make('roles')
+                    ->relationship('roles', 'name')
+                    ->multiple()
+                    ->preload()
+                    ->required()
+                    ->searchable(),
                 Forms\Components\TextInput::make('photo')
                     ->maxLength(255),
                 Forms\Components\DateTimePicker::make('comfirmed_at'),
@@ -53,6 +54,8 @@ class UserResource extends Resource
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('roles.name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('photo')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('comfirmed_at')
@@ -66,6 +69,7 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
+                
             ])
             ->filters([
                 //

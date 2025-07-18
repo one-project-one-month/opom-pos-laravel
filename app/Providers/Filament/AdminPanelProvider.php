@@ -20,6 +20,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use App\Filament\Resources\AdminResource\Pages\SalesReport;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 
+
 class AdminPanelProvider extends PanelProvider
 {
     public function panel(Panel $panel): Panel
