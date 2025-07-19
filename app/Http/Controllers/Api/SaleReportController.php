@@ -15,7 +15,7 @@ class SaleReportController extends Controller
 {
    public function orders()
 {  
-    $orders = Order::with(['user', 'customer'])->get();
+    $orders = Order::with(['user', 'customer'])->paginate(5);
 
     $userNames = $orders->pluck('user.name')->unique()->values();
     $customerNames = $orders->pluck('customer.name')->unique()->values();

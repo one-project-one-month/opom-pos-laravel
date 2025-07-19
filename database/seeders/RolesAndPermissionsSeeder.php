@@ -36,13 +36,13 @@ class RolesAndPermissionsSeeder extends Seeder
         // Create default users with roles
 
         // Super Admin User
-        // $superAdminUser = User::create([
-        //     'name' => 'Super Admin',
-        //     'email' => 'superadmin@pos.com',
-        //     'password' => bcrypt('password'),
-        //     'comfirmed_at' => now(),
-        // ]);
-        // $superAdminUser->assignRole('super_admin');
+        $superAdminUser = User::create([
+            'name' => 'Super Admin',
+            'email' => 'superadmin@pos.com',
+            'password' => bcrypt('password'),
+            'comfirmed_at' => now(),
+        ]);
+        $superAdminUser->assignRole('super_admin');
 
         // Admin User
         // $adminUser = User::create([
@@ -54,31 +54,31 @@ class RolesAndPermissionsSeeder extends Seeder
         // $adminUser->assignRole('admin');
 
         // Manager User
-        $managerUser = User::create([
-            'name' => 'Manager User',
-            'email' => 'manager@pos.com',
-            'password' => bcrypt('password'),
-            'comfirmed_at' => now(),
-        ]);
-        $managerUser->assignRole('manager');
+        // $managerUser = User::create([
+        //     'name' => 'Manager User',
+        //     'email' => 'manager@pos.com',
+        //     'password' => bcrypt('password'),
+        //     'comfirmed_at' => now(),
+        // ]);
+        // $managerUser->assignRole('manager');
 
-        // Cashier User
-        $cashierUser = User::create([
-            'name' => 'Cashier User',
-            'email' => 'cashier@pos.com',
-            'password' => bcrypt('password'),
-            'comfirmed_at' => now(),
-        ]);
-        $cashierUser->assignRole('cashier');
+        // // Cashier User
+        // $cashierUser = User::create([
+        //     'name' => 'Cashier User',
+        //     'email' => 'cashier@pos.com',
+        //     'password' => bcrypt('password'),
+        //     'comfirmed_at' => now(),
+        // ]);
+        // $cashierUser->assignRole('cashier');
 
-        // Inventory Manager User
-        $inventoryUser = User::create([
-            'name' => 'Inventory Manager',
-            'email' => 'inventory@pos.com',
-            'password' => bcrypt('password'),
-            'comfirmed_at' => now(),
-        ]);
-        $inventoryUser->assignRole('inventory_manager');
+        // // Inventory Manager User
+        // $inventoryUser = User::create([
+        //     'name' => 'Inventory Manager',
+        //     'email' => 'inventory@pos.com',
+        //     'password' => bcrypt('password'),
+        //     'comfirmed_at' => now(),
+        // ]);
+        // $inventoryUser->assignRole('inventory_manager');
 
         //Re-cache after seeding
             app()->make(\Spatie\Permission\PermissionRegistrar::class)->forgetCachedPermissions();
