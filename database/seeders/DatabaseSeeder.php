@@ -22,8 +22,8 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // OrderItem::factory(10)->create();
-        // User::factory(2)->create();
+        OrderItem::factory(10)->create();
+        User::factory(2)->create();
         //Order
         // Customer::factory(5)->create();
         // Payment::factory(20)->create();
@@ -31,11 +31,11 @@ class DatabaseSeeder extends Seeder
         Product::factory(100)->create();
         Category::factory(5)->create();
        
-        // Product::factory(10)->create();
-        // User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
+        Product::factory(10)->create();
+        User::factory()->create([
+            'name' => 'Test User',
+            'email' => 'test@example.com',
+        ]);
 
         // OrderItem::factory(10)->create();
         // Order::factory(10)->create();
