@@ -1,15 +1,13 @@
  <?php
 
 use App\Models\Product;
-use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\SaleReportController;
 use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\DiscountItemController;
 use App\Http\Controllers\Api\OrderController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\BrandController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderItemController;
