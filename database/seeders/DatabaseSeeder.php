@@ -42,7 +42,7 @@ class DatabaseSeeder extends Seeder
 
         // Order::factory(10)->create();
         // DiscountItem::factory(10)->create();
-        Brand::factory(5)->create();
+        //Brand::factory(5)->create();
         $this->call(RolesAndPermissionsSeeder::class);
 
         // $this->call([DiscountItemsTableSeeder::class]);
