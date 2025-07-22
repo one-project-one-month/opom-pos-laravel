@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class ActivityLog extends Model
 {
-    /** @use HasFactory<\Database\Factories\ActivityLogsFactory> */
+    /** @use HasFactory<\Database\Factories\ActivityLogFactory> */
     use HasFactory;
 }

@@ -15,6 +15,32 @@ class ProductController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function discount(Request $request)
+    {
+         $query = Product::query();
+        $discountCount = $query->where('dis_percent','>' ,0)->get()->count();
+         $discountCountOfCategory = $query->where('dis_percent','>' ,0)->when($request->has('category_name'), function($q) use($request){
+            $q->whereHas('category', function($name) use($request){
+                $name->where('name', 'like', '%'.$request->category_name.'%');
+            });
+        })->count();
+        $discount = $query->where('dis_percent','>' ,0)->when($request->has('category_name'), function($q) use($request){
+            $q->whereHas('category', function($name) use($request){
+                $name->where('name', 'like', '%'.$request->category_name.'%');
+            });
+        })->paginate(5);
+        return response()->json([
+        'status' => true,
+        'message' => 'discount items',
+        'discount_products_count' => $discountCount,
+        'discount_products_count of category' => $discountCountOfCategory,
+        'discount_products' => $discount,
+        
+        ],200);
+       
+    }
+
     public function index(Request $request)
     {  
         $products = Product::query()->when($request->has('name'), function($q) use($request){
@@ -30,7 +56,7 @@ class ProductController extends Controller
         return response()->json([
         'status' =>  true,
         'message' => 'success filter',
-        '$products' => $products
+        'products' => $products
     ],200);
        
     }
@@ -43,13 +69,14 @@ class ProductController extends Controller
         $status = $request->status;
 
         // Custom logic based on status
-        if ($status === 'out_of_stock') {
-            $query->where('stock', '=', 0);
-        } elseif ($status === 'low_stock') {
-            $query->where('stock', '>', 0)->where('stock', '<=', 50);
-        } elseif ($status === 'full_stock') {
-            $query->where('stock', '>', 50);
-        }
+       if ($status === 'out_of_stock') {
+    $query->where('stock', '=', 0);
+} elseif ($status === 'low_stock') {
+    $query->whereBetween('stock', [1, 49]);
+} elseif ($status === 'full_stock') {
+    $query->where('stock', '>=', 50);
+}
+
     }
     // $products = $query->paginate(5);
 
@@ -66,7 +93,7 @@ class ProductController extends Controller
         $product = Product::all();
         $outOfStock = Product::where('stock', '=', 0)->get();
         $lowOfStock = Product::where('stock', '>', 0)->where('stock', '<', 50)->get();
-        $fullOfStock = Product::where('stock', '>', 50)->get();
+        $fullOfStock = Product::where('stock', '>=', 50)->get();
         $countOfOutOfStock = count($outOfStock);
         $countLowStock = count($lowOfStock);
         $countFullStock = count($fullOfStock);
@@ -124,8 +151,8 @@ class ProductController extends Controller
                 'product' => $product
             ], 201);
 
-            return redirect()->route('products.index')
-                ->with('success', '${product->name} Product created successfully!');
+            // return redirect()->route('products.index')
+            //     ->with('success', '${product->name} Product created successfully!');
         } catch (\Exception $e) {
             // Handle errors
             // Rollback photo upload if error
@@ -197,7 +224,7 @@ class ProductController extends Controller
         try {
             $product->update([
                 'name' => $request->name,
-                'sku' => $request->sku,
+                // 'sku' => $request->sku, 
                 'price' => $request->price,
                 'const_price' => $request->const_price,
                 'stock' => $request->stock,
@@ -220,19 +247,26 @@ class ProductController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
-    {
-        if (!Product::find($id)) {
-            return response()->json(['message' => 'Product not found'], 404);
-        }
-        if (Storage::disk('public')->exists(Product::find($id)->photo)) {
-            Storage::disk('public')->delete(Product::find($id)->photo);
-        }
-
-        $Product = Product::find($id);
-        $Product->delete();
-        return response()->json(['message' =>  $Product->name . ' Product is deleted successfully'], 200);
+   public function destroy(string $id)
+{
+   
+    $product = Product::find($id);
+    if (!$product) {
+        return response()->json(['message' => 'Product not found'], 404);
     }
+
+    
+    if (!empty($product->photo) && Storage::disk('public')->exists($product->photo)) {
+        Storage::disk('public')->delete($product->photo);
+    }
+
+    
+    $productName = $product->name;
+    $product->delete();
+
+    return response()->json(['message' =>  $productName . ' Product is deleted successfully'], 200);
+}
+
 
 
 }

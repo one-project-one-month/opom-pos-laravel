@@ -2,8 +2,8 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ActivityLogsResource\Pages;
-use App\Filament\Resources\ActivityLogsResource\RelationManagers;
+use App\Filament\Resources\ActivityLogResource\Pages;
+use App\Filament\Resources\ActivityLogResource\RelationManagers;
 use App\Models\ActivityLog;
 use Filament\Forms;
 use Filament\Forms\Form;
@@ -13,7 +13,7 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class ActivityLogsResource extends Resource
+class ActivityLogResource extends Resource
 {
     protected static ?string $model = ActivityLog::class;
 
@@ -56,9 +56,9 @@ class ActivityLogsResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListActivityLogs::route('/'),
-            'create' => Pages\CreateActivityLogs::route('/create'),
-            'edit' => Pages\EditActivityLogs::route('/{record}/edit'),
+            'index' => Pages\ListActivityLog::route('/'),
+            'create' => Pages\CreateActivityLog::route('/create'),
+            'edit' => Pages\EditActivityLog::route('/{record}/edit'),
         ];
     }
 }

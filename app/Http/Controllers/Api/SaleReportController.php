@@ -9,13 +9,18 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\User;
 use App\Models\OrderItem;
+use Carbon\Carbon;
 
 
 class SaleReportController extends Controller
 {
-   public function orders()
+   public function orders(Request $request)
 {  
-    $orders = Order::with(['user', 'customer'])->paginate(5);
+
+    $orders = Order::query()->when($request->has('order_number'), function($q) use($request) {
+        $q->where('order_number', 'like', '%'.$request->order_number.'%');
+    })->with(['user', 'customer'])->paginate(5);
+    // $orders = Order::with(['user', 'customer'])->paginate(5);
 
     $userNames = $orders->pluck('user.name')->unique()->values();
     $customerNames = $orders->pluck('customer.name')->unique()->values();
@@ -30,15 +35,26 @@ class SaleReportController extends Controller
     public function orderWeek() {
        $query = Order::query();
        $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
-       $order = $query->get();
+       $order = $query->paginate(5);
        return response()->json($order);
     }
      public function orderMonth() {
        $query = Order::query();
-       $query->whereMonth('created_at', now()->month);
-       $order = $query->get();
+       $query->whereMonth('created_at', now()->month());
+       $order = $query->paginate(5);
        return response()->json($order);
     }
+    public function orderYear() {
+    $query = Order::query();
+    $now = Carbon::now();
+    $startOfYear = $now->copy()->startOfYear();
+    $endOfYear = $now->copy()->endOfYear();
+
+    $query->whereBetween('created_at', [$startOfYear, $endOfYear]);
+    $order = $query->paginate(5);
+    return response()->json($order);
+}
+
     public function totalAmount() {
         $order = Order::all();
         $totalAmount = $order->sum('total');
@@ -128,7 +144,7 @@ class SaleReportController extends Controller
                 ->orderByDesc('total');
         }
             
-        $OrderItems = $query->get();
+        $OrderItems = $query->paginate(5);
         return response()->json($OrderItems);
         
     }
@@ -160,7 +176,7 @@ class SaleReportController extends Controller
                 ->orderBy('total')
                 ->limit(10);
         }
-        $OrderItems = $query->get();
+        $OrderItems = $query->paginate(5);
         return response()->json($OrderItems);
 
     }
@@ -190,7 +206,7 @@ class SaleReportController extends Controller
                 ->groupBy('product_id')
                 ->orderByDesc('total');   
         }
-        $OrderItems = $query->get();
+        $OrderItems = $query->paginate(5);
         return response()->json($OrderItems);
     }
 
@@ -221,7 +237,7 @@ class SaleReportController extends Controller
             ->orderBy('total')
             ->limit('10');
         }
-        $OrderItems = $query->get();
+        $OrderItems = $query->paginate(5);
         return response()->json($OrderItems);
     }
 
