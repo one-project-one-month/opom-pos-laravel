@@ -40,8 +40,12 @@ class UserResource extends Resource
                     ->preload()
                     ->required()
                     ->searchable(),
-                Forms\Components\TextInput::make('photo')
-                    ->maxLength(255),
+                Forms\Components\FileUpload::make('photo')
+                    ->image()
+                    ->directory('user-photos') // Optional: specify upload folder
+                    ->imageEditor() // Optional: allow cropping/editing
+                    ->maxSize(1024) // Optional: limit file size (in KB)
+                    ->nullable(),
                 Forms\Components\DateTimePicker::make('comfirmed_at'),
             ]);
     }
@@ -69,7 +73,7 @@ class UserResource extends Resource
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
-                
+
             ])
             ->filters([
                 //
