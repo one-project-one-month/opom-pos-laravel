@@ -51,8 +51,10 @@ class OrderController extends Controller
                 //         'message' => "Insufficient stock for product: {$product->name}. Available: {$product->stock}, Requested: {$item['quantity']}"
                 //     ], 400);
                 // }
-
-                $itemTotal = $product->price * $item['quantity'];
+                if($product->dis_percent > 0) {
+                    // $item['price'] = $item['price'] - $item['price'] * $product->dis_percent/100;
+                    $product->price = $product->price - $product->price * $product->dis_percent/100;
+                     $itemTotal = $product->price * $item['quantity'];
                 $total += $itemTotal;
 
                 $orderItems[] = [
@@ -61,6 +63,19 @@ class OrderController extends Controller
                     'price' => $product->price,
                     'total' => $itemTotal
                 ];
+                }
+                else {
+                     $itemTotal = $product->price * $item['quantity'];
+                $total += $itemTotal;
+
+                $orderItems[] = [
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $product->price,
+                    'total' => $itemTotal
+                ];
+                }
+               
             }
 
             // Calculate change amount
@@ -72,7 +87,15 @@ class OrderController extends Controller
                     'message' => 'Insufficient payment amount'
                 ], 400);
             }
-
+             $product = Product::find($item['product_id']);
+                if($product->stock < $item['quantity']){
+                    return response()->json([
+                        'status' => false,
+                        'message' => $product->name .' is out of stock than your order.',
+                        'stock of product' => $product->stock
+                    ], 400);
+                }
+             
             // Generate order number (you can customize this logic)
             // $orderNumber = 'ORD-' . date('Ymd') . '-' . str_pad(Order::whereDate('created_at', today())->count() + 1, 4, '0', STR_PAD_LEFT);
             $orderNumber = OrderService::generateOrderNumber();
@@ -91,6 +114,11 @@ class OrderController extends Controller
 
             // Create order items and reduce stock
             foreach ($orderItems as $item) {
+                $product = Product::find($item['product_id']);
+                if($product->dis_percent > 0){
+                    $item['price'] =  $product->price - $product->price * $product->dis_percent/100;
+                    
+                }
                 OrderItem::create([
                     'order_id' => $order->id,
                     'product_id' => $item['product_id'],
@@ -100,7 +128,6 @@ class OrderController extends Controller
                 ]);
 
                 // Reduce product stock
-                $product = Product::find($item['product_id']);
                 $product->decrement('stock', $item['quantity']);
             }
 
@@ -116,6 +143,7 @@ class OrderController extends Controller
                     'order' => $order,
                     'receipt_number' => $order->order_number,
                     'total_amount' => $order->total,
+                    // 'items' => $order->items,
                     'paid_amount' => $order->paid_amount,
                     'change_amount' => $order->change_amount,
                     'items_count' => $order->items->count()
