@@ -9,7 +9,10 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
+use Filament\Forms\Components\Select;
+use App\Models\Brand;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
@@ -40,14 +43,24 @@ class ProductResource extends Resource
                 Forms\Components\TextInput::make('stock')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('brand_id')
+                Select::make('brand_id')
+                    ->label('Brand')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('category_id')
+                    ->relationship('brand', 'name')
+                    ->searchable()
+                    ->preload(),
+                Select::make('category_id')
+                    ->label('Category')
                     ->required()
-                    ->numeric(),
-                Forms\Components\TextInput::make('photo')
-                    ->maxLength(255),
+                    ->relationship('category', 'name')
+                    ->searchable()
+                    ->preload(),
+                Forms\Components\FileUpload::make('photo')
+                    ->image()
+                    ->directory('product-photos') // Optional: specify upload folder
+                    ->imageEditor() // Optional: allow cropping/editing
+                    ->maxSize(1024) // Optional: limit file size (in KB)
+                    ->nullable(),
                 Forms\Components\DatePicker::make('expired_at'),
             ]);
     }
@@ -71,14 +84,17 @@ class ProductResource extends Resource
                 Tables\Columns\TextColumn::make('stock')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('brand_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('category_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('photo')
+                Tables\Columns\TextColumn::make('brand.name')
+                    ->label('Brand Name')
+                    ->sortable()
                     ->searchable(),
+                Tables\Columns\TextColumn::make('category.name')
+                    ->label('Category Name')
+                    ->sortable()
+                    ->searchable(),
+                ImageColumn::make('photo_url')
+                    ->label('Product Photo')
+                    ->square(),
                 Tables\Columns\TextColumn::make('expired_at')
                     ->date()
                     ->sortable(),

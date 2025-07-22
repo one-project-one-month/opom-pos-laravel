@@ -6,6 +6,7 @@ use App\Filament\Resources\OrderResource\Pages;
 use App\Filament\Resources\OrderResource\RelationManagers;
 use App\Models\Order;
 use Filament\Forms;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -19,6 +20,11 @@ class OrderResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function canCreate(): bool
+    {
+        return false;  // disables the Create button
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -26,9 +32,12 @@ class OrderResource extends Resource
                 Forms\Components\TextInput::make('order_number')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('user_id')
+                Select::make('user_id')
+                    ->label('User')
                     ->required()
-                    ->numeric(),
+                    ->relationship('user', 'name')
+                    ->searchable()
+                    ->preload(),
                 Forms\Components\TextInput::make('total')
                     ->required()
                     ->numeric(),
@@ -54,18 +63,21 @@ class OrderResource extends Resource
                 Tables\Columns\TextColumn::make('order_number')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('user_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('User Name')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('total')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('payment_id')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('customer_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('payment.method')
+                    ->label('Payment Method')
+                    ->sortable()
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('user.name')
+                    ->label('Customer Name')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('paid_amount')
                     ->numeric()
                     ->sortable(),

@@ -14,8 +14,8 @@
         </thead>
         <tbody>
             @foreach ($sales as $item)
-                <tr class="filament-tables-table-row hover:bg-gray-50">
-                    <td class="filament-tables-table-cell">{{ $item->product->name ?? 'N/A' }}</td>
+                <tr class="filament-tables-table-row" style="transition: background-color 0.3s ease;" onmouseover="this.style.backgroundColor='#ffe4b5'" onmouseout="this.style.backgroundColor=''">
+                <td class="filament-tables-table-cell">{{ $item->product->name ?? 'N/A' }}</td>
                     <td class="filament-tables-table-cell">{{ $item->total_quantity }}</td>
                     <td class="filament-tables-table-cell">{{ number_format($item->total_sales, 2) }}</td>
                 </tr>
