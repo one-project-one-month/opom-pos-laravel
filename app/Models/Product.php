@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Validation\Rule;
 
 class Product extends Model
@@ -23,7 +25,7 @@ class Product extends Model
         'expired_at'
     ];
 
-    public static function validationRules($id = null)
+    public static function validationRules($id = null) : array
     {
         return [
             'name' => 'required|string|max:255',
@@ -40,6 +42,22 @@ class Product extends Model
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'expired_at' => 'nullable|date|after:today'
         ];
+    }
+    public function brand() : BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function category() :BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo
+            ? asset('storage/' . $this->photo)
+            : null;
     }
 
     public static function updatedValidationRules($id = null)
@@ -66,8 +84,7 @@ class Product extends Model
         return $this->belongsTo(DiscountItem::class, 'discount_item_id');
     }
 
-    public function category()
-    {
-        return $this->belongsTo(Category::class);
-    }
+
+
+
 }

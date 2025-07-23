@@ -26,15 +26,22 @@ class PaymentResource extends Resource
                 Forms\Components\TextInput::make('order_id')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('method')
+                Forms\Components\Select::make('method')
                     ->required()
-                    ->maxLength(255),
+                    ->options([
+                        'K Pay' => 'K Pay',
+                        'Wave Pay' => 'Wave Pay',
+                        'CB Pay' => 'CB Pay',
+                    ]),
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
-                Forms\Components\TextInput::make('paid_at')
+                Forms\Components\DatePicker::make('paid_at')
+                    ->label('Paid Date')
                     ->required()
-                    ->numeric(),
+                    ->format('Y-m-d') // ✅ ensure it matches the database column type
+                    ->displayFormat('F j, Y'),
+
             ]);
     }
 

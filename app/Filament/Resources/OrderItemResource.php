@@ -19,6 +19,11 @@ class OrderItemResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
+    public static function canCreate(): bool
+    {
+        return false;  // disables the Create button
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -49,9 +54,10 @@ class OrderItemResource extends Resource
                 Tables\Columns\TextColumn::make('order_id')
                     ->numeric()
                     ->sortable(),
-                Tables\Columns\TextColumn::make('product_id')
-                    ->numeric()
-                    ->sortable(),
+                Tables\Columns\TextColumn::make('product.name')
+                    ->label('Product Name')
+                    ->sortable()
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('quantity')
                     ->numeric()
                     ->sortable(),
@@ -94,7 +100,7 @@ class OrderItemResource extends Resource
     {
         return [
             'index' => Pages\ListOrderItems::route('/'),
-            'create' => Pages\CreateOrderItem::route('/create'),
+//            'create' => Pages\CreateOrderItem::route('/create'),
             'edit' => Pages\EditOrderItem::route('/{record}/edit'),
         ];
     }
