@@ -89,7 +89,7 @@ class ProductController extends Controller
         $name->where('name', 'like', '%'.$request->category_name.'%');
         });
         })
-        ->paginate(5);
+        ->get();
         $product = Product::all();
         $outOfStock = Product::where('stock', '=', 0)->get();
         $lowOfStock = Product::where('stock', '>', 0)->where('stock', '<', 50)->get();
@@ -98,7 +98,9 @@ class ProductController extends Controller
         $countLowStock = count($lowOfStock);
         $countFullStock = count($fullOfStock);
         $totalProduct = count($product);
-    $products = $query->paginate(5);
+        $pageSize = $request->get('pageSize'); // default 10
+        $products = $query->paginate($pageSize);
+    // $products = $query->get();
         return response()->json([
         "status" => true,
         "message" => "Products status and filter",

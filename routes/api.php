@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderItemController;
+use App\Http\Controllers\Api\UserController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -18,7 +19,11 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource("/v1/products", ProductController::class);
 Route::get('/v1/manager_products', [ProductController::class, 'managerOfProduct']);
+Route::get('v1/all_staff', [UserController::class, 'index']);
+Route::post('v1/suspended/{id}', [UserController::class, 'suspended']);
+Route::post('v1/unsuspended/{id}', [UserController::class, 'unsuspended']);
 Route::get('/v1/dis_products', [ProductController::class, 'discount']);
+Route::post('/v1/products/{id}', [ProductController::class, 'update']);
 
 Route::apiResource('/v1/categories', CategoryController::class);
 
