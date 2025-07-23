@@ -141,7 +141,7 @@ class AuthController extends Controller
 
     // Login and issue access & refresh tokens
     public function login(Request $request)
-    {
+    { 
         $validator = Validator::make($request->all(), [
             'email'    => 'required|email',
             'password' => 'required|min:8',
@@ -156,11 +156,20 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
+        if ($user->suspended == 1) {
+            return response()->json([
+                'status' => false,
+                'message' => 'The manager has suspended your account'
+            ], 401);
+        }
+
         // Create access token
         $accessToken = $user->createToken('access_token')->plainTextToken;
 
         return response()->json([
             'access_token'  => $accessToken,
+            'user_detail' => $user,
+            'staff_role' => $user->role
         ]);
     }
 
@@ -177,6 +186,11 @@ class AuthController extends Controller
     // Get current user
     public function user(Request $request)
     {
-        return response()->json($request->user());
+        $user = $request->user();
+        $staffRole = $user->role;
+        return response()->json([
+            'User_detail' => $user,
+            'Staff_role' => $staffRole
+        ]);
     }
 }

@@ -65,7 +65,7 @@ class RoleResource extends Resource implements HasShieldPermissions
                                     ->placeholder(__('filament-shield::filament-shield.field.team.placeholder'))
                                     /** @phpstan-ignore-next-line */
                                     ->default([Filament::getTenant()?->id])
-                                    ->options(fn (): Arrayable => Utils::getTenantModel() ? Utils::getTenantModel()::pluck('name', 'id') : collect())
+                                    // ->options(fn (): Arrayable => Utils::getTenantModel() ? Utils::getTenantModel()::pluck('name', 'id') : collect())
                                     ->hidden(fn (): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled()))
                                     ->dehydrated(fn (): bool => ! (static::shield()->isCentralApp() && Utils::isTenancyEnabled())),
                                 ShieldSelectAllToggle::make('select_all')
@@ -190,10 +190,10 @@ class RoleResource extends Resource implements HasShieldPermissions
         return Utils::getResourceNavigationSort();
     }
 
-    public static function getSubNavigationPosition(): SubNavigationPosition
-    {
-        return Utils::getSubNavigationPosition() ?? static::$subNavigationPosition;
-    }
+    // public static function getSubNavigationPosition(): SubNavigationPosition
+    // {
+    //     return Utils::getSubNavigationPosition() ?? static::$subNavigationPosition;
+    // }
 
     public static function getSlug(): string
     {

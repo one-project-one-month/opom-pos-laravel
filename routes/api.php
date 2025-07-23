@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderItemController;
+use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\CustomerController;
 
 Route::get('/user', function (Request $request) {
@@ -19,7 +20,11 @@ Route::get('/user', function (Request $request) {
 
 Route::apiResource("/v1/products", ProductController::class);
 Route::get('/v1/manager_products', [ProductController::class, 'managerOfProduct']);
-Route::get('/v1/products_status', [ProductController::class, 'productStatus']);
+Route::get('v1/all_staff', [UserController::class, 'index']);
+Route::post('v1/suspended/{id}', [UserController::class, 'suspended']);
+Route::post('v1/unsuspended/{id}', [UserController::class, 'unsuspended']);
+Route::get('/v1/dis_products', [ProductController::class, 'discount']);
+Route::post('/v1/products/{id}', [ProductController::class, 'update']);
 
 Route::apiResource('/v1/categories', CategoryController::class);
 
@@ -43,7 +48,8 @@ Route::apiResource('/v1/order-items', OrderItemController::class)->only(['index'
 Route::get("/v1/orders", [SaleReportController::class, 'orders']);
 Route::get("/v1/orders_week", [SaleReportController::class, 'orderWeek']);
 Route::get("/v1/orders_month", [SaleReportController::class, 'orderMonth']);
-Route::get("/v1/total_amount", [SaleReportController::class, 'totalAmount']);
+Route::get("/v1/total_amount", [SaleReportController::class,'totalAmount']);
+Route::get("v1/orders_year", [SaleReportController::class, 'orderYear']);
 Route::get("/v1/total_week", [SaleReportController::class, 'totalWeek']);
 Route::get("/v1/total_month", [SaleReportController::class, 'totalMonth']);
 Route::get("/v1/week_gain", [SaleReportController::class, 'weekGain']);
