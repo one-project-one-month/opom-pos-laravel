@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\OrderItemController;
+use App\Http\Controllers\Api\CustomerController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();
@@ -68,3 +69,5 @@ Route::prefix('v1/orders')->group(function () {
 });
 // Route::post('/v1/discount_items/add_products', [DiscountItemController::class, 'productAddToDiscount']);
 // Route::put('/v1/discount_items/product_update/{discountId}', [DiscountItemController::class, 'discountedProductUpdate']);
+
+Route::apiResource('v1/customers',CustomerController::class);
