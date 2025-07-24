@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\f;
 use Illuminate\Http\Request;
+use App\Models\User;
+use App\Models\Role;
 
 class UserController extends Controller
 {
@@ -13,9 +15,64 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $query = User::query();
+        $staffList = $query->where('role_id', 4)->get();
+        $roleName = $staffList->pluck('role')->unique()->values();
+        return response()->json([
+            'status' => true,
+            'message' => 'All staff list',
+            'staff_list' => $staffList,
+            'role_name' => $roleName
+        ], 200);
     }
 
+    public function suspended($id)
+    {
+        
+        $staff = User::find($id);
+        if($staff->role_id != 4){
+            return response()->json([
+                'status' => false,
+                'message' => 'unauthorize'
+            ], 401);
+        }
+        if (!$staff) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+         ], 404);
+        }
+        $staff->suspended = 1;
+        $staff->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'This account has been suspended!',
+            'staff_acc' => $staff
+        ], 200);
+    }
+     public function unsuspended($id)
+    {
+        $staff = User::find($id);
+        if($staff->role_id != 4){
+            return response()->json([
+                'status' => false,
+                'message' => 'unauthorized'
+            ], 401);
+        }
+        if (!$staff) {
+            return response()->json([
+                'status' => false,
+                'message' => 'User not found'
+            ], 404);
+        }
+        $staff->suspended = 0;
+        $staff->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'This account has been unsuspended!',
+            'staff_acc' => $staff
+        ], 200);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -35,7 +92,7 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(f $f)
+    public function show( $f)
     {
         //
     }
@@ -43,7 +100,7 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(f $f)
+    public function edit( $f)
     {
         //
     }
@@ -51,7 +108,7 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, f $f)
+    public function update(Request $request,  $f)
     {
         //
     }
@@ -59,7 +116,7 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(f $f)
+    public function destroy( $f)
     {
         //
     }

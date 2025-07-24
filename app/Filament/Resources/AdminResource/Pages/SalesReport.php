@@ -1,8 +1,7 @@
 <?php
 
 namespace App\Filament\Resources\AdminResource\Pages;
-
-use App\Models\Order_item;
+use App\Models\OrderItem;
 use Carbon\Carbon;
 use App\Models\Order;
 use Filament\Pages\Page;
@@ -43,7 +42,7 @@ class SalesReport extends Page
 
     public function loadSales()
     {
-        $query = Order_item::query()
+        $query = OrderItem::query()
             ->select('product_id', DB::raw('SUM(quantity) as total_quantity'), DB::raw('SUM(total) as total_sales'))
             ->when($this->fromDate && $this->toDate, function ($q) {
                 $q->whereHas('order', function ($q2) {

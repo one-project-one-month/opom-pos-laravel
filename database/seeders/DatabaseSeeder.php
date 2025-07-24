@@ -5,6 +5,11 @@ namespace Database\Seeders;
 use App\Models\Brand;
 use App\Models\User;
 use App\Models\Product;
+use App\Models\Order;
+use App\Models\Customer;
+use App\Models\OrderItem;
+use App\Models\DiscountItem;
+use App\Models\Payment;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use App\Models\Category;
 use Illuminate\Database\Seeder;
@@ -17,15 +22,32 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
+        // OrderItem::factory(10)->create();
+        // User::factory(2)->create();
+        //Order
+        // Customer::factory(5)->create();
+        // Payment::factory(20)->create();
 
-        Product::factory(10)->create();
-        Category::factory(5)->create();
-        Brand::factory(5)->create();
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-            'password'=>Hash::make('admin123'),
-        ]);
+        // Product::factory(100)->create();
+        // Category::factory(5)->create();
+       
+        // Product::factory(10)->create();
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        // OrderItem::factory(10)->create();
+        // Order::factory(10)->create();
+
+        // Order::factory(10)->create();
+        // DiscountItem::factory(10)->create();
+        //Brand::factory(5)->create();
+        // Brand::factory(5)->create();
+       
+        // Brand::factory(5)->create();
+        // $this->call(RolesAndPermissionsSeeder::class);
+
+        // $this->call([DiscountItemsTableSeeder::class]);
     }
 }

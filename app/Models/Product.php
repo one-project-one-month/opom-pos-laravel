@@ -2,8 +2,10 @@
 
 namespace App\Models;
 
+use App\Http\Controllers\Api\CategoryController;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Validation\Rule;
 
 class Product extends Model
@@ -23,12 +25,47 @@ class Product extends Model
         'expired_at'
     ];
 
-    public static function validationRules($id = null)
+    public static function validationRules($id = null) : array
     {
         return [
             'name' => 'required|string|max:255',
             'sku' => [
                 'required',
+                'integer',
+                $id ? Rule::unique('products')->ignore($id) : 'unique:products,sku'
+            ],
+            'price' => 'required|numeric|min:0',
+            'const_price' => 'required|numeric|min:0',
+            'stock' => 'required|integer|min:0',
+            'brand_id' => 'required|integer|exists:brands,id',
+            'category_id' => 'required|integer|exists:categories,id',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'expired_at' => 'nullable|date|after:today'
+        ];
+    }
+    public function brand() : BelongsTo
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function category() :BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo
+            ? asset('storage/' . $this->photo)
+            : null;
+    }
+
+    public static function updatedValidationRules($id = null)
+    {
+        return [
+            'name' => 'required|string|max:255',
+            'sku' => [
+                'nullable',
                 'integer',
                 $id ? Rule::unique('products')->ignore($id) : 'unique:products,sku'
             ],
@@ -42,22 +79,12 @@ class Product extends Model
         ];
     }
 
-    public static function updatedValidationRules($id = null)
+    public function discountItem()
     {
-        return [
-            'name' => 'required|string|max:255',
-            'sku' => [
-                'required',
-                'integer',
-                $id ? Rule::unique('products')->ignore($id) : 'unique:products,sku'
-            ],
-            'price' => 'required|numeric|min:0',
-            'const_price' => 'required|numeric|min:0',
-            'stock' => 'required|integer|min:0',
-            'brand_id' => 'required|integer|exists:brands,id',
-            'category_id' => 'required|integer|exists:categories,id',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'expired_at' => 'nullable|date|after:today'
-        ];
+        return $this->belongsTo(DiscountItem::class, 'discount_item_id');
     }
+
+
+
+
 }

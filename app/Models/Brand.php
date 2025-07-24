@@ -14,4 +14,13 @@ class Brand extends Model
         'name',
         'photo',
     ];
+
+
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo
+            ? asset('storage/' . $this->photo)
+            : null;
+    }
 }
