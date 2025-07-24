@@ -6,14 +6,24 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
+use PhpParser\Node\Expr\FuncCall;
 
 class CustomerController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $customers = Customer::query()
-        ->get();
-        return response()->json($customers);
+
+        $query = Customer::query();
+        $customers = $query->when($request->has('name'), function($q) use($request) {
+            $q->where('name', 'like', '%'.$request->name.'%');
+        })->get();
+        // $customers = Customer::query()
+        // ->get();
+        return response()->json([
+            'status' => true,
+            'message' => 'Customer with filter',
+            'Customer' => $customers
+        ]);
     }
 
     public function store(Request $request)
@@ -38,7 +48,11 @@ class CustomerController extends Controller
         $customer->email = $request->email;
         $customer->save();
         if($customer){
-            return response()->json($customer);
+            return response()->json([
+                'status' => true,
+                'message' => 'Create Customer succeffully.',
+                'customer' => $customer
+            ], 201);
         }else{
             return response()->json(['message' => "Fail to create"]);
         }
@@ -48,27 +62,45 @@ class CustomerController extends Controller
     {
         $customer = Customer::find($id);
         if($customer){
-            return response()->json($customer);
+            return response()->json([
+                'status' => true,
+                'message' => 'Customer detail',
+                'customer' => $customer
+            ], 200);
         }else{
             return response()->json([
+                'status' => false,
                 "message" => "User Not Found"
-            ]);
+            ], 404);
         }
     }
 
     public function update(Request $request, $id)
     {
         $customer = Customer::find($id);
-        if($customer){
+        if(!$customer){
+            return response()->json([
+                'status' => false,
+                'message' => 'Customer not found.',
+                
+            ], 404);
+        }
+        $registeredCustomer = Customer::where('email', $request->email);
+        if(!$registeredCustomer){
             if($request->name) $customer->name = $request->name;
             if($request->phone) $customer->phone = $request->phone;
             if($request->email) $customer->email = $request->email;
             $customer->save();
-            return response()->json($customer);
+            return response()->json([
+                'status' => true,
+                'message' => 'Update customer succeffully',
+                'customer' => $customer
+            ]);
         }else{
              return response()->json([
-                "message" => "User Not Found"
-            ]);
+                'status' => false,
+                "message" => "This email already exist."
+            ], 422);
         }
     }
 
@@ -78,12 +110,14 @@ class CustomerController extends Controller
         if($customer){
             $customer->delete();
             return response()->json([
+                'status' => true,
                 'message' => "$customer->name is successfully deleted"
-            ]);
+            ],200);
         }else{
             return  response()->json([
+                'status' => false,
                 'message' => "User Not Found"
-            ]);
+            ], 404);
         }
     }
 }
