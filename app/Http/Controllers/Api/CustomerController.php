@@ -75,34 +75,53 @@ class CustomerController extends Controller
         }
     }
 
-    public function update(Request $request, $id)
-    {
-        $customer = Customer::find($id);
-        if(!$customer){
-            return response()->json([
-                'status' => false,
-                'message' => 'Customer not found.',
-                
-            ], 404);
-        }
-        $registeredCustomer = Customer::where('email', $request->email);
-        if(!$registeredCustomer){
-            if($request->name) $customer->name = $request->name;
-            if($request->phone) $customer->phone = $request->phone;
-            if($request->email) $customer->email = $request->email;
-            $customer->save();
-            return response()->json([
-                'status' => true,
-                'message' => 'Update customer succeffully',
-                'customer' => $customer
-            ]);
-        }else{
-             return response()->json([
-                'status' => false,
-                "message" => "This email already exist."
-            ], 422);
-        }
+   public function update(Request $request, $id)
+{
+    $validator = Validator::make($request->all(), [
+        'name' => 'required',
+        'phone' => 'required',
+        'email' => 'required|email'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'errors' => $validator->errors()
+        ], 422);
     }
+
+    $customer = Customer::find($id);
+    if (!$customer) {
+        return response()->json([
+            'status' => false,
+            'message' => 'Customer not found.',
+        ], 404);
+    }
+
+    // email နဲ့တူတဲ့တစ်ယောက်ရှိနေပြီလား?
+    $emailExists = Customer::where('email', $request->email)
+        ->where('id', '!=', $id) // ကိုယ်အပေါ်မစစ်ဘဲ
+        ->exists();
+
+    if ($emailExists) {
+        return response()->json([
+            'status' => false,
+            'message' => 'This email already exists.'
+        ], 422);
+    }
+
+    $customer->name = $request->name;
+    $customer->phone = $request->phone;
+    $customer->email = $request->email;
+    $customer->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Update customer successfully.',
+        'customer' => $customer
+    ]);
+}
+
 
     public function destroy($id)
     {
