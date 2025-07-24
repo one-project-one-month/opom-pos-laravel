@@ -10,6 +10,8 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use Laravel\Sanctum\PersonalAccessToken;
 
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Password;
@@ -141,7 +143,7 @@ class AuthController extends Controller
 
     // Login and issue access & refresh tokens
     public function login(Request $request)
-    { 
+    {
         $validator = Validator::make($request->all(), [
             'email'    => 'required|email',
             'password' => 'required|min:8',
@@ -150,26 +152,29 @@ class AuthController extends Controller
             return response()->json(['message' => 'Invalid credentials', 'errors' => $validator->errors()], 422);
         }
 
+        if (!Auth::attempt($request->only('email', 'password'))) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $user = User::where('email', $request->email)->first();
 
-        if (! $user || ! Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
+        // $user = Auth::user();
+        $user->tokens()->delete(); // Clear existing tokens for a fresh session
 
-        if ($user->suspended == 1) {
-            return response()->json([
-                'status' => false,
-                'message' => 'The manager has suspended your account'
-            ], 401);
-        }
+        // Define token expiration times
+        $accessTokenExpiresAt = Carbon::now()->addDays(1);
+        $refreshTokenExpiresAt = Carbon::now()->addDays(7);
 
-        // Create access token
-        $accessToken = $user->createToken('access_token')->plainTextToken;
+        // Create access and refresh tokens
+        $accessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
+        $refreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;
 
         return response()->json([
-            'access_token'  => $accessToken,
-            'user_detail' => $user,
-            'staff_role' => $user->role
+            'access_token' => $accessToken,
+            'access_token_expires_at' => $accessTokenExpiresAt,
+            'refresh_token' => $refreshToken,
+            'refresh_token_expires_at' => $refreshTokenExpiresAt,
+            'token_type' => 'Bearer',
         ]);
     }
 
@@ -182,6 +187,32 @@ class AuthController extends Controller
         return response()->json(['message' => 'Logged out']);
     }
 
+    public function refreshToken(Request $request)
+    {
+        $currentRefreshToken = $request->bearerToken();
+        $refreshToken = PersonalAccessToken::findToken($currentRefreshToken);
+
+        if (!$refreshToken || !$refreshToken->can('refresh') || $refreshToken->expires_at->isPast()) {
+            return response()->json(['error' => 'Invalid or expired refresh token'], 401);
+        }
+
+        $user = $refreshToken->tokenable;
+        $refreshToken->delete();
+
+        $accessTokenExpiresAt = Carbon::now()->addDays(1);
+        $refreshTokenExpiresAt = Carbon::now()->addDays(7);
+
+        $newAccessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
+        $newRefreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;
+
+        return response()->json([
+            'access_token' => $newAccessToken,
+            'access_token_expires_at' => $accessTokenExpiresAt,
+            'refresh_token' => $newRefreshToken,
+            'refresh_token_expires_at' => $refreshTokenExpiresAt,
+            'token_type' => 'Bearer',
+        ]);
+    }
 
     // Get current user
     public function user(Request $request)

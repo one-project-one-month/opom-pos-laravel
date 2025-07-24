@@ -16,10 +16,6 @@ class User extends Authenticatable
     use HasFactory, Notifiable, HasRoles, HasApiTokens, CanResetPassword;
     /** @use HasFactory<\Data
 
-
-
-
-
     /**
      * The attributes that are mass assignable.
      *
@@ -55,9 +51,9 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
-    
+
     public function role()
     {
-      return  $this->belongsTo(Role::class);
+        return  $this->belongsTo(Role::class);
     }
 }
