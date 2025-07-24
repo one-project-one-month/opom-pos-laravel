@@ -98,9 +98,8 @@ class CustomerController extends Controller
         ], 404);
     }
 
-    // email နဲ့တူတဲ့တစ်ယောက်ရှိနေပြီလား?
     $emailExists = Customer::where('email', $request->email)
-        ->where('id', '!=', $id) // ကိုယ်အပေါ်မစစ်ဘဲ
+        ->where('id', '!=', $id) 
         ->exists();
 
     if ($emailExists) {
