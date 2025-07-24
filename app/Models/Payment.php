@@ -7,13 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 class Payment extends Model
 {
+    /** @use HasFactory<\Database\Factories\PaymentFactory> */
     use HasFactory;
 
-    protected $fillable = [
-        'method',
-    ];
+    protected  $fillable=['order_id','method','amount','paid_at'];
 
-    protected $casts = [
-        
-    ];
+    protected  $casts=['paid_at'=>'date'];
 }
