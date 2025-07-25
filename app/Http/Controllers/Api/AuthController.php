@@ -133,11 +133,17 @@ class AuthController extends Controller
         ]);
 
         //create token
-        $access_token = $user->createToken('access_token')->plainTextToken;
+        $accessTokenExpiresAt = Carbon::now()->addDays(1);
+        $refreshTokenExpiresAt = Carbon::now()->addDays(7);
+
+        // Create access and refresh tokens
+        $accessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
+        $refreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;
 
         return response()->json([
             'user'         => $user,
-            'access_token' => $access_token,
+            'access_token' => $accessToken,
+            'refresh_token' => $refreshToken
         ]);
     }
 
@@ -197,13 +203,23 @@ class AuthController extends Controller
         }
 
         $user = $refreshToken->tokenable;
+
+        print_r($user->id);
+
+        if (!$user) {
+            return response()->json(['error' => 'User not found'], 404);
+        }
+
         $refreshToken->delete();
+        $user->tokens()->delete();
+
 
         $accessTokenExpiresAt = Carbon::now()->addDays(1);
         $refreshTokenExpiresAt = Carbon::now()->addDays(7);
 
         $newAccessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
         $newRefreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;
+        $user->save();
 
         return response()->json([
             'access_token' => $newAccessToken,
