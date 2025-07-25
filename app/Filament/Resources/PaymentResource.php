@@ -36,12 +36,6 @@ class PaymentResource extends Resource
                 Forms\Components\TextInput::make('amount')
                     ->required()
                     ->numeric(),
-                Forms\Components\DatePicker::make('paid_at')
-                    ->label('Paid Date')
-                    ->required()
-                    ->format('Y-m-d') // ✅ ensure it matches the database column type
-                    ->displayFormat('F j, Y'),
-
             ]);
     }
 
@@ -55,9 +49,6 @@ class PaymentResource extends Resource
                 Tables\Columns\TextColumn::make('method')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('amount')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('paid_at')
                     ->numeric()
                     ->sortable(),
                 Tables\Columns\TextColumn::make('created_at')
