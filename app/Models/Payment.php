@@ -10,7 +10,7 @@ class Payment extends Model
     /** @use HasFactory<\Database\Factories\PaymentFactory> */
     use HasFactory;
 
-    protected  $fillable=['order_id','method','amount','paid_at'];
+    protected  $fillable=['order_id','method','amount'];
 
-    protected  $casts=['paid_at'=>'date'];
+
 }
