@@ -13,6 +13,7 @@
     use App\Http\Controllers\Api\OrderItemController;
     use App\Http\Controllers\Api\UserController;
     use App\Http\Controllers\Api\CustomerController;
+    use App\Http\Controllers\Api\PaymentController;
 
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -61,6 +62,11 @@
     Route::get('/v1/get_monthly_lower_sale_items{action?}', [SaleReportController::class, 'getMonthlyLowerSalesItems']);
     # download route (sale report)
     Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}', [SaleReportController::class, 'downloadSaleReport']);
+
+    Route::apiResource('v1/brands', BrandController::class);
+    Route::apiResource('v1/payments', PaymentController::class)->only([
+    'index', 'show'
+    ]);
 
     // Route::get('/v1/orders', [OrderController::class, 'index']);
 
