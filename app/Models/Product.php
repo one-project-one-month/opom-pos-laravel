@@ -65,7 +65,7 @@ class Product extends Model
         return [
             'name' => 'required|string|max:255',
             'sku' => [
-                'required',
+                'nullable',
                 'integer',
                 $id ? Rule::unique('products')->ignore($id) : 'unique:products,sku'
             ],
