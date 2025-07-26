@@ -15,16 +15,15 @@ class UserController extends Controller
      */
     public function index()
     {
-        // $query = User::query();
-        // $staffList = $query->where('role', 'manager')->get();
-        // $roleName = $staffList->pluck('role')->unique()->values();
-        // return response()->json([
-        //     'status' => true,
-        //     'message' => 'All staff list',
-        //     'staff_list' => $staffList,
-        //     'role_name' => $roleName
-        // ], 200);
-        $query = Role
+        $query = User::query();
+        $staffList = $query->where('role', 'manager')->get();
+        $roleName = $staffList->pluck('role')->unique()->values();
+        return response()->json([
+            'status' => true,
+            'message' => 'All staff list',
+            'staff_list' => $staffList,
+            'role_name' => $roleName
+        ], 200);
     }
 
     public function suspended($id)
