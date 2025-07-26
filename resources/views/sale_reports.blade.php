@@ -38,20 +38,24 @@
             <th>Name</th>
             <th>Stock</th>
             <th>Price</th>
-            <th>Total</th>
+            <th>Total Price</th>
         </tr>
         @php
             $no = 0
         @endphp
-        @foreach($OrderItems as $item)
-            <tr>
-                <td>{{++$no}}</td>
-                <td>{{$item->product->name}}</td>
-                <td>{{$item->total_quantity}}</td>
-                <td>{{$item->price}}</td>
-                <td>{{$item->total}}</td>
-            </tr>
-        @endforeach
+
+
+        @if(isset($OrderItems))
+            @foreach($OrderItems as $item)
+                <tr>
+                    <td>{{++$no}}</td>
+                    <td>{{$item->product->name}}</td>
+                    <td>{{$item->total_quantity}}</td>
+                    <td>{{$item->price}} MMK</td>
+                    <td>{{$item->total}} MMK</td>
+                </tr>
+            @endforeach
+        @endif
     </table>
 </body>
 </html>
