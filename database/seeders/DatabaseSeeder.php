@@ -31,14 +31,14 @@ class DatabaseSeeder extends Seeder
         // Product::factory(100)->create();
         // Category::factory(5)->create();
        
-        // Product::factory(10)->create();
+        Product::factory(10)->create();
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
 
-        // OrderItem::factory(10)->create();
-        // Order::factory(10)->create();
+        OrderItem::factory(10)->create();
+        Order::factory(10)->create();
 
         // Order::factory(10)->create();
         // DiscountItem::factory(10)->create();
