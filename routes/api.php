@@ -63,7 +63,7 @@
     # download route (sale report)
     Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}', [SaleReportController::class, 'downloadSaleReport']);
 
-    Route::apiResource('v1/brands', BrandController::class);
+    // Route::apiResource('v1/brands', BrandController::class);
     Route::apiResource('v1/payments', PaymentController::class)->only([
     'index', 'show'
     ]);

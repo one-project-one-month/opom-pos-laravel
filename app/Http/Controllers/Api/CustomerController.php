@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Customer;
 use Illuminate\Support\Facades\Validator;
 use PhpParser\Node\Expr\FuncCall;
+use App\Models\Order;
 
 class CustomerController extends Controller
 {
@@ -65,7 +66,7 @@ class CustomerController extends Controller
             return response()->json([
                 'status' => true,
                 'message' => 'Customer detail',
-                'customer' => $customer
+                'customer' => $customer->order
             ], 200);
         }else{
             return response()->json([

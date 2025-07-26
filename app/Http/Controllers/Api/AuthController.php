@@ -162,7 +162,7 @@ class AuthController extends Controller
         $user->tokens()->delete(); // Clear existing tokens for a fresh session
 
         // Define token expiration times
-        $accessTokenExpiresAt = Carbon::now()->addDays(1);
+        $accessTokenExpiresAt = Carbon::now()->addMinutes(5);
         $refreshTokenExpiresAt = Carbon::now()->addDays(7);
 
         // Create access and refresh tokens
@@ -174,6 +174,8 @@ class AuthController extends Controller
             'access_token_expires_at' => $accessTokenExpiresAt,
             'refresh_token' => $refreshToken,
             'refresh_token_expires_at' => $refreshTokenExpiresAt,
+            'user' => $user,
+            'staff_role'=> $user->getRoleNames(),
             'token_type' => 'Bearer',
         ]);
     }

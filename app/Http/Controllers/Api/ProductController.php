@@ -232,6 +232,7 @@ class ProductController extends Controller
                 'stock' => $request->stock,
                 'brand_id' => $request->brand_id,
                 'category_id' => $request->category_id,
+                'dis_percent' =>$request->dis_percent,
                 'photo' => $photoPath,
                 'expired_at' => $request->expired_at,
             ]);

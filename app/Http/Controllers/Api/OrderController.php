@@ -147,6 +147,7 @@ class OrderController extends Controller
                     // 'items' => $order->items,
                     'paid_amount' => $order->paid_amount,
                     'change_amount' => $order->change_amount,
+                    'payment' => $order->payment->method,
                     'items_count' => $order->items->count()
                 ]
             ], 201);
