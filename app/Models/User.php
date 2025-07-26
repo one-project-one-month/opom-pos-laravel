@@ -26,7 +26,10 @@ class User extends Authenticatable
         'email',
         'password',
         'password_reset_token',
-        'password_reset_token_expires_at'
+        'password_reset_token_expires_at',
+        'photo',
+        'comfirmed_at'
+
     ];
 
     /**
@@ -55,5 +58,12 @@ class User extends Authenticatable
     public function role()
     {
         return  $this->belongsTo(Role::class);
+    }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo
+            ? asset('storage/' . $this->photo)
+            : null;
     }
 }

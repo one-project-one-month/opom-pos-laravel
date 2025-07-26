@@ -5,32 +5,50 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\f;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Role;
+use Svg\Tag\Rect;
 
 class UserController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $query = User::query();
-        $staffList = $query->where('role', 'manager')->get();
-        $roleName = $staffList->pluck('role')->unique()->values();
-        return response()->json([
-            'status' => true,
-            'message' => 'All staff list',
-            'staff_list' => $staffList,
-            'role_name' => $roleName
-        ], 200);
+    //     ​ေ
+        $manager = Auth::user();
+
+     if(!$manager->hasrole('manager')){
+            return response()->json([
+                'status' => false,
+                'message' => 'unauthorize'
+            ], 401);
+        }
+
+      $cashiers = User::query()->role('cashier')->get();
+      return response()->json([
+        'status' => true,
+        'message' => 'all cashier user list',
+        'Cashier List' => $cashiers
+      ], 200);
+
     }
 
     public function suspended($id)
     {
+        if (!Auth::check()) {
+    return response()->json([
+        'status' => false,
+        'message' => 'Unauthorized (Not Logged In)',
+    ], 401);
+    }
+
         
         $staff = User::find($id);
-        if($staff->role_id != 4){
+        $manager = Auth::user();
+        if(!$manager->hasrole('manager')){
             return response()->json([
                 'status' => false,
                 'message' => 'unauthorize'
@@ -51,12 +69,21 @@ class UserController extends Controller
         ], 200);
     }
      public function unsuspended($id)
-    {
-        $staff = User::find($id);
-        if($staff->role_id != 4){
+    {   
+        
+        if (!Auth::check()) {
+    return response()->json([
+        'status' => false,
+        'message' => 'Unauthorized (Not Logged In)',
+    ], 401);
+    }
+
+         $staff = User::find($id);
+        $manager = Auth::user();
+        if(!$manager->hasrole('manager')){
             return response()->json([
                 'status' => false,
-                'message' => 'unauthorized'
+                'message' => 'unauthorize'
             ], 401);
         }
         if (!$staff) {

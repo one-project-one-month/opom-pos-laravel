@@ -133,7 +133,7 @@ class AuthController extends Controller
         ]);
 
         //create token
-        $accessTokenExpiresAt = Carbon::now()->addDays(1);
+        $accessTokenExpiresAt = Carbon::now()->addDay(1);
         $refreshTokenExpiresAt = Carbon::now()->addDays(7);
 
         // Create access and refresh tokens
@@ -168,11 +168,11 @@ class AuthController extends Controller
         $user->tokens()->delete(); // Clear existing tokens for a fresh session
 
         // Define token expiration times
-        $accessTokenExpiresAt = Carbon::now()->addMinutes(5);
+        $accessTokenExpiresAt = Carbon::now()->addDay(1);
         $refreshTokenExpiresAt = Carbon::now()->addDays(7);
 
         // Create access and refresh tokens
-        $accessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
+        $accessToken = $user->createToken('access_token', ['read', 'write'], $accessTokenExpiresAt)->plainTextToken;
         $refreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;
 
         return response()->json([
@@ -219,7 +219,7 @@ class AuthController extends Controller
         $accessTokenExpiresAt = Carbon::now()->addDays(1);
         $refreshTokenExpiresAt = Carbon::now()->addDays(7);
 
-        $newAccessToken = $user->createToken('access_token', ['*'], $accessTokenExpiresAt)->plainTextToken;
+        $newAccessToken = $user->createToken('access_token', ['read', 'write'], $accessTokenExpiresAt)->plainTextToken;
         $newRefreshToken = $user->createToken('refresh_token', ['refresh'], $refreshTokenExpiresAt)->plainTextToken;
         $user->save();
 

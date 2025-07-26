@@ -39,7 +39,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $superAdminUser = User::create([
             'name' => 'Super Admin',
             'email' => 'superadmin@pos.com',
-            'role_id' => 1,
             'password' => bcrypt('password'),
             'comfirmed_at' => now(),
         ]);
@@ -49,7 +48,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $adminUser = User::create([
             'name' => 'Admin User',
             'email' => 'admin@pos.com',
-            'role_id' =>2,
             'password' => bcrypt('password'),
             'comfirmed_at' => now(),
         ]);
@@ -59,7 +57,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $managerUser = User::create([
             'name' => 'Manager User',
             'email' => 'manager@pos.com',
-            'role_id' => 3,
             'password' => bcrypt('password'),
             'comfirmed_at' => now(),
         ]);
@@ -69,7 +66,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $cashierUser = User::create([
             'name' => 'Cashier User',
             'email' => 'cashier@pos.com',
-            'role_id' => 4,
             'password' => bcrypt('password'),
             'comfirmed_at' => now(),
         ]);
@@ -79,7 +75,6 @@ class RolesAndPermissionsSeeder extends Seeder
         $inventoryUser = User::create([
             'name' => 'Inventory Manager',
             'email' => 'inventory@pos.com',
-            'role_id' => 5,
             'password' => bcrypt('password'),
             'comfirmed_at' => now(),
         ]);

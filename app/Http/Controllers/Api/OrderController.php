@@ -141,7 +141,7 @@ class OrderController extends Controller
                 'message' => 'Order created successfully',
                 'data' => [
                     'order' => $order,
-                    'staffRole' => $order->user->role,
+                    'staffRole' => $order->user->getRoleNames(),
                     'receipt_number' => $order->order_number,
                     'total_amount' => $order->total,
                     // 'items' => $order->items,

@@ -14,16 +14,33 @@
     use App\Http\Controllers\Api\UserController;
     use App\Http\Controllers\Api\CustomerController;
     use App\Http\Controllers\Api\PaymentController;
+use App\Http\Middleware\PreventRefreshTokenAccess;
 
     Route::get('/user', function (Request $request) {
         return $request->user();
     })->middleware('auth:sanctum');
 
-    Route::apiResource("/v1/products", ProductController::class);
+        Route::get('/v1/auth/refresh', [AuthController::class, 'refreshToken']);
+        // Route::middleware(['auth:sanctum', 'abilities:refresh'])->post('/v1/auth/refresh', [AuthController::class, 'refreshToken']);
+
+
+        Route::prefix('v1/auth')->group(function () {
+        Route::post('/register', [AuthController::class, 'register']);
+        Route::post('/login', [AuthController::class, 'login']);
+        Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.reset');
+        Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+        Route::get('/check-auth', [AuthController::class, 'checkAuth'])->middleware('auth:sanctum');
+        Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
+    });
+
+    Route::middleware(['auth:sanctum', PreventRefreshTokenAccess::class])->group(function () {
+   
+        Route::apiResource("/v1/products", ProductController::class);
     Route::get('/v1/manager_products', [ProductController::class, 'managerOfProduct']);
-    Route::get('v1/all_staff', [UserController::class, 'index']);
-    Route::post('v1/suspended/{id}', [UserController::class, 'suspended']);
-    Route::post('v1/unsuspended/{id}', [UserController::class, 'unsuspended']);
+    Route::get('v1/all_staff', [UserController::class, 'index'])->middleware('auth:sanctum');
+    Route::post('v1/suspended/{id}', [UserController::class, 'suspended'])->middleware('auth:sanctum');
+    Route::post('v1/unsuspended/{id}', [UserController::class, 'unsuspended'])->middleware('auth:sanctum');
     Route::get('/v1/dis_products', [ProductController::class, 'discount']);
     Route::post('/v1/products/{id}', [ProductController::class, 'update']);
 
@@ -33,16 +50,7 @@
 
     // Authentication routes
 
-    Route::prefix('v1/auth')->group(function () {
-        Route::post('/register', [AuthController::class, 'register']);
-        Route::post('/login', [AuthController::class, 'login']);
-        Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-        Route::post('/refresh', [AuthController::class, 'refreshToken']);
-        Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->name('password.reset');
-        Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-        Route::get('/check-auth', [AuthController::class, 'checkAuth'])->middleware('auth:sanctum');
-        Route::get('/user', [AuthController::class, 'user'])->middleware('auth:sanctum');
-    });
+    
 
     //orderitem
     Route::apiResource('/v1/order-items', OrderItemController::class)->only(['index', 'store', 'show']);
@@ -83,3 +91,12 @@
     // Route::put('/v1/discount_items/product_update/{discountId}', [DiscountItemController::class, 'discountedProductUpdate']);
 
     Route::apiResource('v1/customers', CustomerController::class);
+
+    });
+
+    // Route::middleware(['auth:sanctum', 'ability:*'])->group(function () {
+    
+
+    // });
+
+    
