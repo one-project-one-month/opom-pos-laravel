@@ -172,6 +172,26 @@ public function orderDay(){
         'gain' => $gain
     ], 200);
 }
+
+public function gain() {
+       $all = OrderItem::with('product')->get();
+        $cost = $all->map(function ($item) {
+        return optional($item->product)->const_price;
+        })->filter()->sum();
+        
+        $price = $all->map(function ($item) {
+
+        return optional($item->product)->price;
+        })->filter()->sum();
+       
+        $gain = $price - $cost;
+
+    return response()->json([
+        'total_cost' => $cost,
+        'total_price' => $price,
+        'gain' => $gain
+    ], 200);
+}
     
     public function getWeeklyTopSaleItems(Request $request){
         $action = $request->query('action','quantity');

@@ -67,6 +67,7 @@ use App\Http\Middleware\PreventRefreshTokenAccess;
     Route::get("/v1/day_gain", [SaleReportController::class, 'dayGain']);
     Route::get("/v1/week_gain", [SaleReportController::class, 'weekGain']);
     Route::get("/v1/month_gain", [SaleReportController::class, 'monthGain']);
+    Route::get("/v1/total_gain", [SaleReportController::class, 'gain']);
 
     Route::get('/v1/get_weekly_top_sale_items{action?}', [SaleReportController::class, 'getWeeklyTopSaleItems']);
     Route::get('/v1/get_weekly_lower_sale_items{action?}', [SaleReportController::class, 'getWeeklyLowerSaleItems']);
