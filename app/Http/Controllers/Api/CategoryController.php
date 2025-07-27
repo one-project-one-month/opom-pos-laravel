@@ -8,34 +8,11 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryResource;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
-    //
-    // public function adding(Request $request){
-    //     $items = new Category();
-    //     $items->name=$request->name;
-    //     $items->save();
-
-    //     return response()->json(['Message'=>'Categroy Created Successfuly'],200);
-    // }
-
-    // public function update(Request $request){
-    //     $items = Category::findorfail($request->id);
-    //      $items->name=$request->name;
-    //     $items->update();
-    //     return response()->json(['Message'=>'Categroy Updated Successfuly'],200);
-    // }
-
-    //  public function delete(Request $request){
-    //     $items = Category::findorfail($request->id)->delete();
-    //     return response()->json(['Message'=>'Categroy deleted Successfuly'],200);
-    // }
-
-    // public function dataGet(){
-    //     $items=Category::all();
-    //     return response()->json($items);
-    // }
      public function index(Request $request)
     {   
        $category = Category::with('product')
@@ -57,42 +34,109 @@ class CategoryController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
+       $validatedData = $request->validate([
+            'name' => 'required',
+            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $category = Category::create([
-            'name' => $request->name,
-        ]);
+         if ($request->hasFile('photo')) {
+            $imagePath = $request->file('photo')->store('categories', 'public');
+            $validatedData['photo'] = $imagePath;
+        } else {
+            $validatedData['photo'] = null;
+        }
 
-        return new CategoryResource($category);
+        $category = Category::create($validatedData);
+
+        return response()->json([
+            'message' => 'category created successfully',
+            'category' => $category
+        ], 201);
+
+       
     }
 
     public function show($id)
     {
-        $category = Category::findOrFail($id);
-        return new CategoryResource($category);
+
+        $category = Category::find($id);
+
+         if(!$category){
+             return response()->json(['message' => 'Category not found'], 404);
+         }
+         return response()->json([
+            'status' => true,
+            'message' => 'categories detail',
+            'category' => $category,
+            'category_products' => $category->product
+         ]);
+       
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Category $category, $id)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
+         $validator = Validator($request->all(), [
+            'name' => 'required',
+            'photo' => 'required|image'
+         ]);
 
-        $category = Category::findOrFail($id);
-        $category->update([
-            'name' => $request->name,
-        ]);
+         if($validator->fails()){
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Validation failed',
+                'errors' => $validator->errors()
+            ], 422);
+         }
 
-        return new CategoryResource($category);
+         $category = Category::find($id);
+         if(!$category){
+             return response()->json(['message' => 'Category not found'], 404);
+         }
+
+         $photoPath = $category->photo;
+         if($request->hasFile('photo')){
+            $photoPath = $request->file('photo')->store('categories', 'public');
+
+        if($category->photo && Storage::disk('public')->exists($category->photo)){
+            Storage::disk('public')->delete($category->photo);
+         }
+        } else {
+            $photoPath = $category->photo;
+        }
+        try {
+            $category->update([
+                'name' => $request->name,
+                'photo' => $photoPath
+            ]);
+             return response()->json(['message' => 'Category (' . $category->name . ') updated successfully'], 200);
+        } catch (\Exception $e) {
+              if ($photoPath && $photoPath !== $category->photo) {
+                Storage::disk('public')->delete($photoPath);
+            }
+
+            return response()->json(['message' => 'Error updating product: ' . $e->getMessage()], 500);
+        }
     }
+         
 
    public function destroy($id)
 {
-    $category = Category::findOrFail($id);
+    $category = Category::find($id);
+    if (!$category) {
+        return response()->json(['message' => 'Category not found'], 404);
+    }
+
+    
+    if (!empty($product->photo) && Storage::disk('public')->exists($category->photo)) {
+        Storage::disk('public')->delete($category->photo);
+    }
+
+    
+    $categoryName = $category->name;
     $category->delete();
-    return response()->json(['message' => 'Category deleted']);
+
+    return response()->json(['message' =>  $categoryName . ' Category is deleted successfully'], 200);
+
 }
 
 }
