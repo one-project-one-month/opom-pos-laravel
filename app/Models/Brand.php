@@ -9,4 +9,18 @@ class Brand extends Model
 {
     /** @use HasFactory<\Database\Factories\BrandFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'name',
+        'photo',
+    ];
+
+
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo
+            ? asset('storage/' . $this->photo)
+            : null;
+    }
 }

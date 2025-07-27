@@ -19,11 +19,12 @@ class ProductFactory extends Factory
         return [
             'name'=> fake()->name(),
             'sku' => fake()->randomFloat(20, 20, 300),
-            'price' => fake()->randomFloat(1, 20, 300),
-            'const_price' => fake()->randomFloat(1, 20, 300),
-            'stock' => rand(200, 300),
-            'brand_id' => rand(1, 10),
-            'category_id' => rand(1, 10),
+            'price' => rand(4000, 5000),
+            'const_price' =>rand(1000, 2000),
+            'dis_percent' => rand(5,10),
+            'stock' => rand(0, 100),
+            'brand_id' => rand(1, 5),
+            'category_id' => rand(1, 5),
 
         ];
     }

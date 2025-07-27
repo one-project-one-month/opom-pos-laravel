@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Factories\Factory;
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Brand>
  */
-class BrandFactory extends Factory
+class BrandFactory extends Factory 
 {
     /**
      * Define the model's default state.
@@ -17,7 +17,8 @@ class BrandFactory extends Factory
     public function definition(): array
     {
         return [
-            
+            'name' => fake()->name(),
+            'photo' => fake()->imageUrl(640, 480, 'business', true, 'Faker', true),
         ];
     }
 }
