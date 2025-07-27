@@ -35,11 +35,38 @@ class SaleReportController extends Controller
     ]);
 }
 
+public function orderDay(){
+    $query = Order::query();
+    $query->whereDate('created_at', now()->toDateString());
+    $orders = $query->paginate(5);
+     $orderItem = $orders->pluck('items')->unique()->values();
+    $userNames = $orders->pluck('user.name')->unique()->values();
+    $customerNames = $orders->pluck('customer.name')->unique()->values();
+    $payment = $orders->pluck('payment')->unique()->values();
+      return response()->json([
+        'orders' => $orders,
+        'orderItem' => $orderItem,
+        'user_names' => $userNames,
+        'customer_names' => $customerNames,
+        'payment' => $payment
+    ]);
+}
+
     public function orderWeek() {
        $query = Order::query();
        $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
-       $order = $query->paginate(5);
-       return response()->json($order);
+       $orders = $query->paginate(5);
+        $orderItem = $orders->pluck('items')->unique()->values();
+    $userNames = $orders->pluck('user.name')->unique()->values();
+    $customerNames = $orders->pluck('customer.name')->unique()->values();
+    $payment = $orders->pluck('payment')->unique()->values();
+      return response()->json([
+        'orders' => $orders,
+        'orderItem' => $orderItem,
+        'user_names' => $userNames,
+        'customer_names' => $customerNames,
+        'payment' => $payment
+    ]);
     }
      public function orderMonth() {
        $query = Order::query();
@@ -65,6 +92,13 @@ class SaleReportController extends Controller
         return response()->json($totalAmount);
 
     }
+    public function totalDay() {
+        $query = Order::query();
+        $query->whereDate('created_at', now()->toDateString());
+        $total = $query->get();
+        $totalAmount = $total->sum('total');
+        return response()->json($totalAmount);
+    }
      public function totalWeek() {
         $query = Order::query();
         $query->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()]);
@@ -81,6 +115,25 @@ class SaleReportController extends Controller
         $totalAmount = $total->sum('total');
         return response()->json($totalAmount);
     }
+     public function dayGain() {
+       $day = OrderItem::with('product')->whereDate('created_at', now()->toDateString())->get();
+        $cost = $day->map(function ($item) {
+        return optional($item->product)->const_price;
+        })->filter()->sum();
+        
+        $price = $day->map(function ($item) {
+
+        return optional($item->product)->price;
+        })->filter()->sum();
+       
+        $gain = $price - $cost;
+
+    return response()->json([
+        'total_cost' => $cost,
+        'total_price' => $price,
+        'gain' => $gain
+    ]);
+}
        public function weekGain() {
        $week = OrderItem::with('product')->whereBetween('created_at', [now()->startOfWeek(), now()->endOfWeek()])->get();
         $cost = $week->map(function ($item) {

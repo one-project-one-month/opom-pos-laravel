@@ -56,12 +56,15 @@ use App\Http\Middleware\PreventRefreshTokenAccess;
     //orderitem
     Route::apiResource('/v1/order-items', OrderItemController::class)->only(['index', 'store', 'show']);
     Route::get("/v1/orders", [SaleReportController::class, 'orders']);
+    Route::get("/v1/orders_day", [SaleReportController::class, 'orderDay']);
     Route::get("/v1/orders_week", [SaleReportController::class, 'orderWeek']);
     Route::get("/v1/orders_month", [SaleReportController::class, 'orderMonth']);
     Route::get("/v1/total_amount", [SaleReportController::class, 'totalAmount']);
     Route::get("v1/orders_year", [SaleReportController::class, 'orderYear']);
+    Route::get("/v1/total_day", [SaleReportController::class, 'totalDay']);
     Route::get("/v1/total_week", [SaleReportController::class, 'totalWeek']);
     Route::get("/v1/total_month", [SaleReportController::class, 'totalMonth']);
+    Route::get("/v1/day_gain", [SaleReportController::class, 'dayGain']);
     Route::get("/v1/week_gain", [SaleReportController::class, 'weekGain']);
     Route::get("/v1/month_gain", [SaleReportController::class, 'monthGain']);
 
