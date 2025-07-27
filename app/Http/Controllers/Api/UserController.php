@@ -17,7 +17,7 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
-    //     ​ေ
+    //     
         $manager = Auth::user();
 
      if(!$manager->hasrole('manager')){
@@ -27,7 +27,7 @@ class UserController extends Controller
             ], 401);
         }
 
-      $cashiers = User::query()->role('cashier')->get();
+      $cashiers = User::query()->role('cashier')->paginate(5);
       return response()->json([
         'status' => true,
         'message' => 'all cashier user list',

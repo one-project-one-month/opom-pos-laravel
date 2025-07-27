@@ -45,6 +45,7 @@ use App\Http\Middleware\PreventRefreshTokenAccess;
     Route::post('/v1/products/{id}', [ProductController::class, 'update']);
 
     Route::apiResource('/v1/categories', CategoryController::class);
+    Route::post('/v1/categories/{id}', [CategoryController::class, 'update']);
 
     Route::apiResource('v1/brands', BrandController::class);
 
@@ -72,9 +73,8 @@ use App\Http\Middleware\PreventRefreshTokenAccess;
     Route::get('/v1/download/top_lower_sale_reports{time?}{choice?}{action?}', [SaleReportController::class, 'downloadSaleReport']);
 
     // Route::apiResource('v1/brands', BrandController::class);
-    Route::apiResource('v1/payments', PaymentController::class)->only([
-    'index', 'show'
-    ]);
+    Route::apiResource('v1/payments', PaymentController::class);
+    Route::post('/v1/payments/{id}', [PaymentController::class, 'update']);
 
     // Route::get('/v1/orders', [OrderController::class, 'index']);
 

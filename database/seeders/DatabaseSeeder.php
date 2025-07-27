@@ -27,14 +27,15 @@ class DatabaseSeeder extends Seeder
         //Order
         Customer::factory(5)->create();
        Payment::factory()->createMany([
-        ['method' => 'Cash',
-          'paid_at' => now()],
-        ['method' => 'Kpay',
-            'paid_at' => now()],
-        ['method' => 'AYA pay',
-        'paid_at' => now()],
-        ['method' => 'CB pay',
-        'paid_at' => now()],
+        ['method' => 'Cash'
+    
+          ],
+        ['method' => 'Kpay'
+           ],
+        ['method' => 'AYA pay'
+        ],
+        ['method' => 'CB pay'
+        ],
         ]);
         Product::factory(100)->create();
         Category::factory(5)->create();
