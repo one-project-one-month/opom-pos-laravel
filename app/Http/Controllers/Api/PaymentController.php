@@ -87,7 +87,7 @@ public function store(Request $request)
     public function update( Request $request, $id)
     {
         $validator = Validator($request->all(), [
-            'mehtod' => 'required',
+            'method' => 'required',
             'photo' => 'required|image'
         ]);
 
