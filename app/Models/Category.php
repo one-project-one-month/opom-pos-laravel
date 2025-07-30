@@ -15,4 +15,11 @@ class Category extends Model
     {
       return   $this->hasMany(Product::class);
     }
+
+    public function getPhotoUrlAttribute(): ?string
+    {
+        return $this->photo
+            ? asset('storage/' . $this->photo)
+            : null;
+    }
 }

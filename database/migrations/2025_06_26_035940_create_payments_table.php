@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('order_id')->nullable();
             $table->string('method');
-            $table->timestamp('paid_at')->now();
+            // $table->timestamp('paid_at')->now();
             $table->integer('amount')->nullable();
             $table->timestamps();
         });
