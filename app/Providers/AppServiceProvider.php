@@ -21,7 +21,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-         if (env('APP_ENV') === 'production') {
+        if (app()->environment('production')) {
         URL::forceScheme('https');
     }
         // Password::resetResponse(function ($request, $response) {
