@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers\Filament;
+// namespace App\Providers\Filament;
 
 // use Filament\Pages;
 // use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
@@ -61,9 +61,8 @@ namespace App\Providers\Filament;
 //             ->authMiddleware([
 //                 Authenticate::class,
 //             ]);
-//     }
+    // }
 // }
-
 
 namespace App\Providers\Filament;
 
@@ -73,6 +72,7 @@ use Filament\Widgets;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
 use Filament\Http\Middleware\Authenticate;
+use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Routing\Middleware\SubstituteBindings;
@@ -106,6 +106,7 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->middleware([
                 EncryptCookies::class,
+                AddQueuedCookiesToResponse::class, // Added this critical middleware
                 StartSession::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
