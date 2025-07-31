@@ -61,12 +61,14 @@ class CustomerController extends Controller
 
     public function show($id)
     {
-        $customer = Customer::find($id);
+        $customer = Customer::with('order.payment')->find($id);
+
         if($customer){
             return response()->json([
                 'status' => true,
                 'message' => 'Customer detail',
-                'customer' => $customer->order
+                'customer_detail'=> $customer,
+                'customer_orders' => $customer->order,
             ], 200);
         }else{
             return response()->json([
