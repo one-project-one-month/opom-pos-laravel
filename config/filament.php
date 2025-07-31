@@ -2,7 +2,9 @@
 
 return [
 
-
+'auth' => [
+    'guard' => 'web', // 'sanctum' ဖြစ်နေရင် 'web' ပြောင်းပါ
+],
 
     // ... your current config remains ...
 
