@@ -10,20 +10,22 @@
 // ];
 return [
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
-    'allowed_methods' => ['*'],
+    'paths' => ['api/*', 'login', 'sanctum/csrf-cookie', 'v1/*'], // make sure 'login' or your API path is here
 
-    'allowed_origins' => ['http://localhost:3000'],
+    'allowed_methods' => ['*'], // or ['GET', 'POST', 'OPTIONS', 'PUT', 'DELETE']
+
+    'allowed_origins' => ['http://localhost:3000'], // OR '*' only for dev
 
     'allowed_origins_patterns' => [],
 
-    'allowed_headers' => ['*'],
+    'allowed_headers' => ['*'], // for Content-Type, Authorization, etc
 
     'exposed_headers' => [],
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => false, // important if using cookies / auth headers
 
 ];
+
