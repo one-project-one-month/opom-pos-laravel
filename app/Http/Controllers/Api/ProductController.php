@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Svg\Tag\Rect;
+use Symfony\Component\VarDumper\Caster\PdoCaster;
 
 class ProductController extends Controller
 {
@@ -39,6 +40,17 @@ class ProductController extends Controller
         
         ],200);
        
+    }
+    public function deleteDiscount($id)
+    {
+        $discountProduct = Product::find($id);
+        $discountProduct->dis_percent = 0;
+        $discountProduct->save();
+        return response()->json([
+            'status' => true,
+            'message' => 'cancel discount successful.',
+            'discountProdcut' => $discountProduct,
+        ], 200);
     }
 
     public function index(Request $request)
