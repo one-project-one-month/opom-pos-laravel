@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Providers\Filament;
-use App\Filament\Pages\Auth\Login;
+// use App\Filament\Pages\Auth\Login;
 use Filament\Pages;
 use BezhanSalleh\FilamentShield\FilamentShieldPlugin;
 use Filament\Panel;
