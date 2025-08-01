@@ -1,12 +1,12 @@
 <?php
 return [
-    'paths' => [
-    'api/*',
-    'filament/*',
-    'admin/*',
-    'login',
-    'logout',
-],
+//     'paths' => [
+//     'api/*',
+//     'filament/*',
+//     'admin/*',
+//     'login',
+//     'logout',
+// ],
 
     'paths' => ['api/*',
                 'filament/*',
