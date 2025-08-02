@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: filament-laravel-app
+    restart: unless-stopped
+    depends_on:
+      - db
+    volumes:
+      - ./docker/.env:/var/www/.env
+      - app_data:/var/www
+
+  nginx:
+    image: nginx:latest
+    container_name: filament-nginx
+    ports:
+      - "9000:80"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/conf.d/default.conf
+      - app_data:/var/www:ro
+    depends_on:
+      - app
+
+  db:
+    image: mysql:latest
+    container_name: filament-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: laravel
+      MYSQL_USER: laravel
+      MYSQL_PASSWORD: secret
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+volumes:
+  db_data:
+  app_data:
