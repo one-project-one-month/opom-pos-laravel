@@ -2,17 +2,19 @@
 
 return [
 
-
+'auth' => [
+    'guard' => 'web', // 'sanctum' ဖြစ်နေရင် 'web' ပြောင်းပါ
+],
 
     // ... your current config remains ...
 
-    'panels' => [
-        'admin' => [
-            'path' => 'admin', // your desired panel URL
-            'login' => \Filament\Http\Livewire\Auth\Login::class,
-        ],
+    // 'panels' => [
+    //     'admin' => [
+    //         'path' => 'admin', // your desired panel URL
+    //         'login' => \Filament\Http\Livewire\Auth\Login::class,
+    //     ],
     
-    ],
+    // ],
 
     /*
     |--------------------------------------------------------------------------

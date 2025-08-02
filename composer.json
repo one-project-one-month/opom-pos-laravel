@@ -7,9 +7,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-curl": "*",
+        "ext-mbstring": "*",
+        "ext-openssl": "*",
+        "ext-pdo": "*",
+        "ext-tokenizer": "*",
+        "ext-xml": "*",
         "barryvdh/laravel-dompdf": "^3.1",
-        "bezhansalleh/filament-shield": "^3.3",
-        "filament/filament": "3.3",
+        "bezhansalleh/filament-shield": "3.3",
+        "filament/filament": "*",
         "laravel/framework": "^12.0",
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
@@ -67,6 +73,7 @@
             "dont-discover": []
         }
     },
+    
     "config": {
         "optimize-autoloader": true,
         "preferred-install": "dist",
