@@ -21,8 +21,6 @@ RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoload
 # Copy custom php config
 COPY docker/php.ini /usr/local/etc/php/php.ini
 
-COPY docker/.env /var/www/.env
-
 # Generate application key (only if .env doesn't exist)
 RUN if [ ! -f .env ]; then cp .env.example .env && php artisan key:generate; fi
 
