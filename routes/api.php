@@ -43,7 +43,7 @@ use App\Http\Middleware\PreventRefreshTokenAccess;
     Route::post('v1/unsuspended/{id}', [UserController::class, 'unsuspended'])->middleware('auth:sanctum');
     Route::get('/v1/dis_products', [ProductController::class, 'discount']);
     Route::post('/v1/products/{id}', [ProductController::class, 'update']);
-    Route::post('/v1/cancel-discount/{id}', [ProductController::class, 'deleteDiscount']);
+    Route::post('/v1/products/cancel-discount/{id}', [ProductController::class, 'deleteDiscount']);
 
     Route::apiResource('/v1/categories', CategoryController::class);
     Route::post('/v1/categories/{id}', [CategoryController::class, 'update']);

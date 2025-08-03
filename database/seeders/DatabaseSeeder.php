@@ -37,8 +37,8 @@ class DatabaseSeeder extends Seeder
         ['method' => 'CB pay'
         ],
         ]);
-        Product::factory(100)->create();
-        Category::factory(5)->create();
+        // Product::factory(100)->create();
+        // Category::factory(5)->create();
 
 
        
@@ -53,7 +53,7 @@ class DatabaseSeeder extends Seeder
 
         // Order::factory(10)->create();
         // DiscountItem::factory(10)->create();
-        Brand::factory(5)->create();
+        // Brand::factory(5)->create();
         // Brand::factory(5)->create();
        
         // Brand::factory(5)->create();

@@ -19,15 +19,17 @@ class SaleReportController extends Controller
 
     $orders = Order::query()->when($request->has('order_number'), function($q) use($request) {
         $q->where('order_number', 'like', '%'.$request->order_number.'%');
-    })->with(['user', 'customer'])->paginate(5);
+    })->with(['user', 'customer']);
+     $pageSize = $request->get('pageSize'); // default 10
+    $order = $orders->paginate($pageSize);
     // $orders = Order::with(['user', 'customer'])->paginate(5);
-    $orderItem = $orders->pluck('items')->unique()->values();
-    $userNames = $orders->pluck('user.name')->unique()->values();
-    $customerNames = $orders->pluck('customer.name')->unique()->values();
-    $payment = $orders->pluck('payment')->unique()->values();
+    $orderItem = $order->pluck('items')->unique()->values();
+    $userNames = $order->pluck('user.name')->unique()->values();
+    $customerNames = $order->pluck('customer.name')->unique()->values();
+    $payment = $order->pluck('payment')->unique()->values();
 
     return response()->json([
-        'orders' => $orders,
+        'orders' => $order,
         'orderItem' => $orderItem,
         'user_names' => $userNames,
         'customer_names' => $customerNames,
