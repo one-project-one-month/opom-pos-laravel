@@ -242,7 +242,7 @@ class ProductController extends Controller
                 'price' => $request->price,
                 'const_price' => $request->const_price,
                 'stock' => $request->stock,
-                'brand_id' => $request->brand_id,
+                // 'brand_id' => $request->brand_id,
                 'category_id' => $request->category_id,
                 'dis_percent' =>$request->dis_percent,
                 'photo' => $photoPath,

@@ -48,11 +48,11 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
 
-        // OrderItem::factory(10)->create();
-        // Order::factory(10)->create();
+        OrderItem::factory(10)->create();
+        Order::factory(10)->create();
 
         // Order::factory(10)->create();
-        // DiscountItem::factory(10)->create();
+        DiscountItem::factory(10)->create();
         Brand::factory(5)->create();
         // Brand::factory(5)->create();
        

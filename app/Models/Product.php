@@ -38,7 +38,7 @@ class Product extends Model
             'price' => 'required|numeric|min:0',
             'const_price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'brand_id' => 'required|integer|exists:brands,id',
+            'brand_id' => 'integer',
             'category_id' => 'required|integer|exists:categories,id',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'expired_at' => 'nullable|date|after:today'
@@ -73,7 +73,7 @@ class Product extends Model
             'price' => 'required|numeric|min:0',
             'const_price' => 'required|numeric|min:0',
             'stock' => 'required|integer|min:0',
-            'brand_id' => 'required|integer|exists:brands,id',
+            // 'brand_id' => 'required|integer|exists:brands,id',
             'dis_percent' => 'nullable|integer',
             'category_id' => 'required|integer|exists:categories,id',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
